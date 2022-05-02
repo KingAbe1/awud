@@ -11,7 +11,14 @@ class Favuorite extends StatelessWidget {
       home: DefaultTabController(
         length: 4,
         child: Scaffold(
-          appBar: AppBar(
+        body: SafeArea(
+          child: NestedScrollView(
+          floatHeaderSlivers: true,
+          headerSliverBuilder: (context, innerBoxIsScrolled) =>[
+      SliverOverlapAbsorber(
+          handle:
+          NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+          sliver: SliverAppBar(
             elevation: 0,
             backgroundColor: Colors.white,
             title: const Text(
@@ -31,7 +38,7 @@ class Favuorite extends StatelessWidget {
                           padding: EdgeInsets.only(right: 20),
                           child: Icon(
                             FeatherIcons.search,
-                            color: Colors.black,
+                            color: Color.fromRGBO(248, 135, 88, 1),
                             size: 20,
                           )
                       ),
@@ -39,7 +46,7 @@ class Favuorite extends StatelessWidget {
                         padding: EdgeInsets.only(right: 20),
                         child: Icon(
                           FeatherIcons.bell,
-                          color: Colors.black,
+                          color: Color.fromRGBO(248, 135, 88, 1),
                           size: 20,
                         ),
                       ),
@@ -47,7 +54,7 @@ class Favuorite extends StatelessWidget {
                         padding: EdgeInsets.only(right: 20),
                         child: Icon(
                           FeatherIcons.settings,
-                          color: Colors.black,
+                          color: Color.fromRGBO(248, 135, 88, 1),
                           size: 20,
                         ),
                       )
@@ -57,7 +64,7 @@ class Favuorite extends StatelessWidget {
             ],
             bottom: TabBar(
               labelColor: Color.fromRGBO(248, 135, 88, 1),
-              unselectedLabelColor: Colors.black,
+              unselectedLabelColor: Colors.black54,
               indicatorColor: Color.fromRGBO(248, 135, 88, 1),
               indicatorWeight: 3,
               tabs: [
@@ -80,106 +87,112 @@ class Favuorite extends StatelessWidget {
               ],
             ),
           ),
-          body: TabBarView(
-              children: [
-                ListView(
+      )
+    ],
+            body: SafeArea(
+              child: TabBarView(
                   children: [
-                    ListTile(
-                      onTap: (){
-                        print("hello");
-                      },
-                        leading: Icon(FeatherIcons.download),
-                        title: Text('Downlaoded Music'),
-                        subtitle: Text("0"),
+                    ListView(
+                      children: [
+                        ListTile(
+                          onTap: (){
+                            print("hello");
+                          },
+                            leading: Icon(FeatherIcons.download),
+                            title: Text('Downlaoded Music'),
+                            subtitle: Text("0"),
+                        ),
+                        ListTile(
+                          onTap: (){
+                            print("hello");
+                          },
+                          leading: Icon(FeatherIcons.heart),
+                          title: Text('Favourite Music'),
+                          subtitle: Text("0"),
+                        ),
+                        ListTile(
+                          onTap: (){
+                            print("hello");
+                          },
+                          leading: Icon(FeatherIcons.play),
+                          title: Text('Playlists'),
+                          subtitle: Text("0"),
+                        ),
+                        ListTile(
+                          onTap: (){
+                            print("hello");
+                          },
+                          leading: Icon(FeatherIcons.music),
+                          title: Text("Albums"),
+                          subtitle: Text("0"),
+                        ),
+                        ListTile(
+                          onTap: (){
+                            print("hello");
+                          },
+                          leading: Icon(FeatherIcons.user),
+                          title: Text('Artists'),
+                          subtitle: Text("0"),
+                        ),
+                      ],
                     ),
-                    ListTile(
-                      onTap: (){
-                        print("hello");
-                      },
-                      leading: Icon(FeatherIcons.heart),
-                      title: Text('Favourite Music'),
-                      subtitle: Text("0"),
+                    ListView(
+                      children: [
+                        ListTile(
+                          onTap: (){
+                            print("hello");
+                          },
+                          leading: Icon(FeatherIcons.download),
+                          title: Text('Downlaoded episodes'),
+                          subtitle: Text("0"),
+                        ),
+                        ListTile(
+                          onTap: (){
+                            print("hello");
+                          },
+                          leading: Icon(FeatherIcons.heart),
+                          title: Text('Favourite podcast'),
+                          subtitle: Text("0"),
+                        )
+                      ],
                     ),
-                    ListTile(
-                      onTap: (){
-                        print("hello");
-                      },
-                      leading: Icon(FeatherIcons.play),
-                      title: Text('Playlists'),
-                      subtitle: Text("0"),
+                    ListView(
+                      children: [
+                        ListTile(
+                          onTap: (){
+                            print("hello");
+                          },
+                          leading: Icon(FeatherIcons.download),
+                          title: Text('Downlaoded Audiobook'),
+                          subtitle: Text("0"),
+                        ),
+                        ListTile(
+                          onTap: (){
+                            print("hello");
+                          },
+                          leading: Icon(FeatherIcons.heart),
+                          title: Text('Favourite Audiobook'),
+                          subtitle: Text("0"),
+                        )
+                      ],
                     ),
-                    ListTile(
-                      onTap: (){
-                        print("hello");
-                      },
-                      leading: Icon(FeatherIcons.music),
-                      title: Text("Albums"),
-                      subtitle: Text("0"),
+                    ListView(
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            FeatherIcons.dollarSign
+                          ),
+                          title: Text('Purcashe History'),
+                          subtitle: Text("No purchase history"),
+                        )
+                      ],
                     ),
-                    ListTile(
-                      onTap: (){
-                        print("hello");
-                      },
-                      leading: Icon(FeatherIcons.user),
-                      title: Text('Artists'),
-                      subtitle: Text("0"),
-                    ),
-                  ],
-                ),
-                ListView(
-                  children: [
-                    ListTile(
-                      onTap: (){
-                        print("hello");
-                      },
-                      leading: Icon(FeatherIcons.download),
-                      title: Text('Downlaoded episodes'),
-                      subtitle: Text("0"),
-                    ),
-                    ListTile(
-                      onTap: (){
-                        print("hello");
-                      },
-                      leading: Icon(FeatherIcons.heart),
-                      title: Text('Favourite podcast'),
-                      subtitle: Text("0"),
-                    )
-                  ],
-                ),
-                ListView(
-                  children: [
-                    ListTile(
-                      onTap: (){
-                        print("hello");
-                      },
-                      leading: Icon(FeatherIcons.download),
-                      title: Text('Downlaoded Audiobook'),
-                      subtitle: Text("0"),
-                    ),
-                    ListTile(
-                      onTap: (){
-                        print("hello");
-                      },
-                      leading: Icon(FeatherIcons.heart),
-                      title: Text('Favourite Audiobook'),
-                      subtitle: Text("0"),
-                    )
-                  ],
-                ),
-                ListView(
-                  children: [
-                    ListTile(
-                      leading: Icon(
-                        FeatherIcons.dollarSign
-                      ),
-                      title: Text('Purcashe History'),
-                      subtitle: Text("No purchase history"),
-                    )
-                  ],
-                ),
-          ]),
+              ]),
+            ),
+          ),
         ),
       ),
+                ),
     );
   }
 }
