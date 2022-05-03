@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'search.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class Audiobook extends StatelessWidget {
@@ -31,13 +31,21 @@ class Audiobook extends StatelessWidget {
               Container(
                   margin: const EdgeInsets.only(right: 5),
                   child: Row(
-                    children: const [
+                    children: [
                       Padding(
                           padding: EdgeInsets.only(right: 20),
-                          child: Icon(
-                            FeatherIcons.search,
-                            color: Color.fromRGBO(248, 135, 88, 1),
-                            size: 20,
+                          child: GestureDetector(
+                            onTap: (){
+                              showSearch(
+                                context:context,
+                                delegate: MySearchDelegate(),
+                              );
+                            },
+                            child: Icon(
+                              FeatherIcons.search,
+                              color: Color.fromRGBO(248, 135, 88, 1),
+                              size: 20,
+                            ),
                           )
                       ),
                       Padding(

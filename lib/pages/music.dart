@@ -37,9 +37,12 @@ class Music extends StatelessWidget {
                             Padding(
                                 padding: EdgeInsets.only(right: 20),
                                 child: GestureDetector(
-                                  onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                                      builder: (BuildContext context) => new Search())),
-
+                                  onTap: (){
+                                    showSearch(
+                                      context:context,
+                                      delegate: MySearchDelegate(),
+                                    );
+                                  },
                                   child: Icon(
                                     FeatherIcons.search,
                                     color: Color.fromRGBO(248, 135, 88, 1),
