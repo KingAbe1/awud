@@ -8,6 +8,11 @@ class Audiobook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        routes: {
+          '/notification': (context) => Notification(),
+          '/setting': (context) => Setting(),
+          '/music_page': (context) => MusicPage()
+        },
       home: Scaffold(
         body: SafeArea(
           child: NestedScrollView(
@@ -31,7 +36,7 @@ class Audiobook extends StatelessWidget {
               Container(
                   margin: const EdgeInsets.only(right: 5),
                   child: Row(
-                    children: [
+                    children:[
                       Padding(
                           padding: EdgeInsets.only(right: 20),
                           child: GestureDetector(
@@ -50,18 +55,28 @@ class Audiobook extends StatelessWidget {
                       ),
                       Padding(
                         padding: EdgeInsets.only(right: 20),
-                        child: Icon(
-                          FeatherIcons.bell,
-                          color: Color.fromRGBO(248, 135, 88, 1),
-                          size: 20,
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.pushNamed(context, '/notification');
+                          },
+                          child: Icon(
+                            FeatherIcons.bell,
+                            color: Color.fromRGBO(248, 135, 88, 1),
+                            size: 20,
+                          ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(right: 20),
-                        child: Icon(
-                          FeatherIcons.settings,
-                          color: Color.fromRGBO(248, 135, 88, 1),
-                          size: 20,
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.pushNamed(context, '/setting');
+                          },
+                          child: Icon(
+                            FeatherIcons.settings,
+                            color: Color.fromRGBO(248, 135, 88, 1),
+                            size: 20,
+                          ),
                         ),
                       )
                     ],
@@ -1315,6 +1330,509 @@ class Audiobook extends StatelessWidget {
       ),
         ),
       )
+    );
+  }
+}
+
+
+class Notification extends StatefulWidget {
+  const Notification({Key? key}) : super(key: key);
+
+  @override
+  _NotificationState createState() => _NotificationState();
+}
+
+class _NotificationState extends State<Notification> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: Scaffold(
+            body: SafeArea(
+              child: NestedScrollView(
+                floatHeaderSlivers: true,
+                headerSliverBuilder: (context, innerBoxIsScrolled) =>
+                [
+                  SliverOverlapAbsorber(
+                    handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    sliver: SliverAppBar(
+                      elevation: 0,
+                      backgroundColor: Colors.white,
+                      title: const Text(
+                        "Notifications",
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+                body: SafeArea(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 5),
+                    color: Colors.white,
+                    child: ListView(
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Card(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.asset(
+                                      "assets/images/telahun.jpg",
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 15),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'Emaya Ethiopia',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Tilahun Gessesse',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 15
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(left: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  '8 HOURS AGO - NEW SINGLE',
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              color: Colors.black12,
+                              height: 1,
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Card(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.asset(
+                                      "assets/images/telahun.jpg",
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 15),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'Emaya Ethiopia',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Tilahun Gessesse',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 15
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(left: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  '8 HOURS AGO - NEW SINGLE',
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              color: Colors.black12,
+                              height: 1,
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Card(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.asset(
+                                      "assets/images/telahun.jpg",
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 15),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'Emaya Ethiopia',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Tilahun Gessesse',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 15
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(left: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  '8 HOURS AGO - NEW SINGLE',
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              color: Colors.black12,
+                              height: 1,
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Card(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.asset(
+                                      "assets/images/telahun.jpg",
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 15),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'Emaya Ethiopia',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Tilahun Gessesse',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 15
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(left: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  '8 HOURS AGO - NEW SINGLE',
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              color: Colors.black12,
+                              height: 1,
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Card(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.asset(
+                                      "assets/images/telahun.jpg",
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 15),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'Emaya Ethiopia',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Tilahun Gessesse',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 15
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(left: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  '8 HOURS AGO - NEW SINGLE',
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              color: Colors.black12,
+                              height: 1,
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Card(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.asset(
+                                      "assets/images/telahun.jpg",
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 15),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'Emaya Ethiopia',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Tilahun Gessesse',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 15
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(left: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  '8 HOURS AGO - NEW SINGLE',
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              color: Colors.black12,
+                              height: 1,
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+        )
+    );
+  }
+}
+
+class Setting extends StatelessWidget {
+  const Setting({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: Scaffold(
+            body: SafeArea(
+              child: NestedScrollView(
+                floatHeaderSlivers: true,
+                headerSliverBuilder: (context, innerBoxIsScrolled) =>[
+                  SliverOverlapAbsorber(
+                    handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    sliver: SliverAppBar(
+                      elevation: 0,
+                      backgroundColor: Colors.white,
+                      title: const Text(
+                        "Settings",
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+                body: SafeArea(
+                  child: Container(
+                    color: Colors.white,
+                    margin: const EdgeInsets.only(left: 5,right: 5),
+                    child: ListView(
+                      children: [
+                        Container(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: AssetImage('assets/images/128-1280406_view-user-icon-png-user-circle-icon-png.png'),
+                              radius: 30,
+                            ),
+                            SizedBox(width: 10),
+                            Column(
+                              children: [
+                                Text(
+                                  'abellegesse151',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Awud Free',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 10,bottom: 10),
+                          color: Colors.black12,
+                          height: 1,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+        )
+    );
+  }
+}
+
+class MusicPage extends StatelessWidget {
+  const MusicPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+
+      ),
     );
   }
 }
