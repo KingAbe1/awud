@@ -9,8 +9,11 @@ import "package:awud_app/pages/podcast.dart";
 import "package:awud_app/pages/audiobook.dart";
 import "package:awud_app/pages/favuorite.dart";
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'pages/mongodb.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await MongoDatabase.connect();
   runApp(navBar());
 }
 
