@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:dio/dio.dart';
-import 'package:json_annotation/json_annotation.dart';
-// part 'podcast.g.dart';
-// import 'package:json_serializable/json_serializable.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +25,7 @@ class _PodcastState extends State<Podcast> {
   List? episodes;
   // String value = '';
   Future getPodcast() async{
-    var response = await http.get(Uri.parse('http://192.168.176.59:3000/podcasts'));
+    var response = await http.get(Uri.parse('http://192.168.78.59:3000/podcasts'));
     // var response1 = await http.get(Uri.parse('http://192.168.37.59:3000/episodes/${widget.id}/epsiode/'));
 
     if(response.statusCode == 200){
@@ -177,7 +175,7 @@ class _PodcastState extends State<Podcast> {
                                                     setState(() {
                                                       // print((json.decode(jsonData![index])).runtimeType);
                                                       Navigator.of(context).push(MaterialPageRoute(
-                                                        builder: (context) => infoPage(value: jsonData![index]['_id'].toString(),id: jsonData![index]['_id'].toString()),
+                                                        builder: (context) => infoPage(value: jsonData![index]['_id'].toString(),id: jsonData![index]['_id'].toString(),name:jsonData![index]['podcast_title'].toString()),
                                                       ));
                                                     });
                                                   },
@@ -405,8 +403,9 @@ class _PodcastState extends State<Podcast> {
 class infoPage extends StatefulWidget {
   final String value;
   final String id;
+  final String name;
 
-  infoPage({Key? key, required this.value, required this.id}) : super(key: key);
+  infoPage({Key? key, required this.value, required this.id,required this.name}) : super(key: key);
 
   @override
   State<infoPage> createState() => _infoPageState();
@@ -419,7 +418,7 @@ class _infoPageState extends State<infoPage> {
   // String value = '';
   Future printValue() async{
     // print(widget.id);
-    var response = await http.get(Uri.parse('http://192.168.176.59:3000/podcasts/${widget.value}'));
+    var response = await http.get(Uri.parse('http://192.168.78.59:3000/podcasts/${widget.value}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);
@@ -429,7 +428,7 @@ class _infoPageState extends State<infoPage> {
   }
 
   printEpisode(x) async{
-    var response = await http.get(Uri.parse('http://192.168.176.59:3000/episodes/${widget.id}/epsiode/'));
+    var response = await http.get(Uri.parse('http://192.168.78.59:3000/episodes/${widget.id}/epsiode/'));
 
     if(response.statusCode == 200){
       episodes = json.decode(response.body);
@@ -455,7 +454,7 @@ class _infoPageState extends State<infoPage> {
                             elevation: 0,
                             backgroundColor: Colors.white,
                             title: Text(
-                              "${widget.value}",
+                              "${widget.name}",
                               style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
@@ -1081,7 +1080,7 @@ class _playerPageState extends State<playerPage> {
 
   Future printValue() async{
     // print(widget.epi);
-    var response = await http.get(Uri.parse('http://192.168.176.59:3000/podcasts/${widget.value}'));
+    var response = await http.get(Uri.parse('http://192.168.78.59:3000/podcasts/${widget.value}'));
 
     if(response.statusCode == 200){
       // print(response);
@@ -1095,7 +1094,7 @@ class _playerPageState extends State<playerPage> {
     // print(widget.epi);
 
     // var response = await Dio().get(Uri.parse('http://192.168.176.59:3000/episodes/${widget.value}/epsiode/${widget.epi}'));
-    var response = await Dio().get('http://192.168.176.59:3000/episodes/${widget.value}/epsiode/${widget.epi}');
+    var response = await Dio().get('http://192.168.78.59:3000/episodes/${widget.value}/epsiode/${widget.epi}');
 
     if(response.statusCode == 200){
       st = response.data;
@@ -1209,7 +1208,41 @@ class _playerPageState extends State<playerPage> {
                                                   SizedBox(height:30),
                                                   Container(
                                                     child: Column(
-
+                                                      children: [
+                                                        SizedBox(height: 30),
+                                                        Container(
+                                                          margin: EdgeInsets.only(left: 30),
+                                                          child: Row(
+                                                            children: [
+                                                              FaIcon(
+                                                                  FontAwesomeIcons.backwardStep
+                                                              ),
+                                                              SizedBox(width: 50),
+                                                              FaIcon(
+                                                                  FontAwesomeIcons.backwardFast
+                                                              ),
+                                                              SizedBox(width: 50),
+                                                              GestureDetector(
+                                                                onTap: (){
+                                                                  final player = AudioCache();
+                                                                  player.play("${st['episode_audio'].toString()}");
+                                                                },
+                                                                child: FaIcon(
+                                                                    FontAwesomeIcons.play
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: 50),
+                                                              FaIcon(
+                                                                  FontAwesomeIcons.forwardFast
+                                                              ),
+                                                              SizedBox(width: 50),
+                                                              FaIcon(
+                                                                  FontAwesomeIcons.forwardStep
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   )
                                                 ],
