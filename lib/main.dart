@@ -12,8 +12,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'pages/mongodb.dart';
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await MongoDatabase.connect();
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await MongoDatabase.connect();
   runApp(navBar());
 }
 

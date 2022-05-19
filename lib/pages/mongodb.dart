@@ -8,7 +8,7 @@ class MongoDatabase{
   static connect() async {
     db = await Db.create(MONGO_CONN_URL);
     await db.open();
-    inspect(db);
+    // inspect(db);
     userCollection = db.collection(USER_COLLECTION);
   }
 }
