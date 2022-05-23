@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -1093,14 +1092,6 @@ class _playerPageState extends State<playerPage> {
     }
   }
 
-  late AudioPlayer advancedPlayer;
-
-  @override
-  void initState(){
-    super.initState();
-    advancedPlayer = AudioPlayer();
-  }
-
   @override
   Widget build(BuildContext context) {
     // var size = MediaQuery.of(context).size;
@@ -1204,9 +1195,9 @@ class _playerPageState extends State<playerPage> {
                                                   ),
                                                   SizedBox(height:60),
                                                   Container(
-                                                    child: Row(
+                                                    child: Column(
                                                       children: [
-                                                        AudioFile(advancedPlayer:advancedPlayer,path:"audio/${episode['episode_audio']}")
+                                                        // Player(path:"assets/audio/${episode['episode_audio']}")
                                                       ],
                                                     ),
                                                   )

@@ -1,81 +1,93 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 
-class AudioFile extends StatefulWidget {
-  final AudioPlayer advancedPlayer;
+class Player extends StatefulWidget {
   final String path;
-  const AudioFile({Key? key, required this.advancedPlayer, required this.path}) : super(key: key);
-
+  const Player({Key? key, required this.path}) : super(key: key);
   @override
-  _AudioFileState createState() => _AudioFileState();
+  _PlayerState createState() => _PlayerState();
 }
 
-class _AudioFileState extends State<AudioFile> {
-
-  static AudioCache player = AudioCache();
-  Duration _duration = new Duration();
-  Duration _position = new Duration();
-
-  // final String path = path;
-  bool isPlaying = false;
-  bool isPaused = false;
-  bool isLoop = false;
+class _PlayerState extends State<Player> {
+  AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
+    _audioPlayer = AudioPlayer();
 
-    this.widget.advancedPlayer.onDurationChanged.listen((d) {setState(() {
-      _duration = d;
-    });});
-
-    this.widget.advancedPlayer.onAudioPositionChanged.listen((p) {setState(() {
-      _position = p;
-    });});
-    
-    // this.widget.advancedPlayer.pla
-    
+    // Set a sequence of audio sources that will be played by the audio player.
+    _audioPlayer.setAsset(widget.path)
+        .catchError((error) {
+      // catch load errors: 404, invalid url ...
+      print("An error occured $error");
+    });
   }
 
-  Widget btnStart(){
-    return GestureDetector(
-      onTap: (){
-        print('here');
-        final player = AudioCache();
-        player.play(widget.path);
-      },
-      child: const FaIcon(
-        FontAwesomeIcons.play
-      ),
-    );
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
-  Widget loadAsset(){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        btnStart()
-      ],
-    );
+  Widget _playerButton(PlayerState playerState) {
+
+    // 1
+    final processingState = playerState.processingState;
+    if (processingState == ProcessingState.loading ||
+        processingState == ProcessingState.buffering) {
+
+      // 2
+      return Container(
+        margin: EdgeInsets.all(8.0),
+        width: 64.0,
+        height: 64.0,
+        child: CircularProgressIndicator(),
+      );
+    } else if (_audioPlayer.playing != true) {
+
+      // 3
+      return IconButton(
+        icon: Icon(Icons.play_arrow),
+        iconSize: 30.0,
+        onPressed: _audioPlayer.play,
+      );
+    } else if (processingState != ProcessingState.completed) {
+
+      // 4
+      return IconButton(
+        icon: Icon(Icons.pause),
+        iconSize: 30.0,
+        onPressed: _audioPlayer.pause,
+      );
+    } else {
+
+      // 5
+      return IconButton(
+        icon: Icon(Icons.replay),
+        iconSize: 30.0,
+        onPressed: () => _audioPlayer.seek(Duration.zero,
+            index: _audioPlayer.effectiveIndices!.first),
+      );
+    }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20,right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-
-              ],
+      child: Flexible(
+        child: Row(
+          children: [
+            StreamBuilder<PlayerState>(
+              stream: _audioPlayer.playerStateStream,
+              builder: (context, snapshot) {
+                final playerState = snapshot.data;
+                return _playerButton(playerState!);
+              },
             ),
-          ),
-          loadAsset()
-        ],
+          ],
+        ),
       ),
     );
   }
