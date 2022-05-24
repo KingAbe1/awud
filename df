@@ -1,0 +1,61 @@
+[33mcommit cdb6ad7448997fc3f8bd41448e91cecb721443c6[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Mon May 23 18:41:49 2022 +0300
+
+    added darkmode
+
+[33mcommit f294a95a8d162a9d6f02b862e9f0f1787be0e826[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Sat May 21 16:36:56 2022 +0300
+
+    added play functionality
+
+[33mcommit 8b59785e958d4db82877596c986e9491f9d70179[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Thu May 19 11:48:55 2022 +0300
+
+    Revert "undo previous changes"
+    
+    This reverts commit 8be80d0708670389cc9cefde2b537764d2fc22a2.
+
+[33mcommit 8be80d0708670389cc9cefde2b537764d2fc22a2[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Thu May 19 11:46:37 2022 +0300
+
+    undo previous changes
+
+[33mcommit 634194645b937696d2c8c50af16a1cf905b9f2a0[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Thu May 19 10:25:28 2022 +0300
+
+    inegrated podcast page
+
+[33mcommit 2d05bb467393bf90ff6dfc9e7155702ca2a5533b[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Thu May 12 15:22:03 2022 +0300
+
+    Added mongodb
+
+[33mcommit b484d077907f0d80388e320da0af5543c28de7c5[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Thu May 12 14:46:43 2022 +0300
+
+    Added some page for settings and notifications
+
+[33mcommit 8737a153b21b8b4aa70232f901bf16dcca1dc339[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Tue May 3 08:01:17 2022 +0300
+
+    added search functionalities and modified some files
+
+[33mcommit d8f55c57f559e37fd14f7452389426e7adf2e45c[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Mon May 2 17:50:39 2022 +0300
+
+    Made some changes to the file
+
+[33mcommit 8a6d9ce53158b639c27639d4003ef9b262307377[m
+Author: Abel Legesse <abellegesse151@gmail.com>
+Date:   Mon May 2 11:47:21 2022 +0300
+
+    frist version
