@@ -6,9 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'audio_file.dart';
 import 'search.dart';
 import 'package:http/http.dart' as http;
-import 'audio_file.dart';
+// import 'podcast_search.dart';
 
 
 class Podcast extends StatefulWidget {
@@ -23,10 +25,11 @@ class _PodcastState extends State<Podcast> {
   List? episodes;
   // String value = '';
   Future getPodcast() async{
-    var response = await http.get(Uri.parse('http://192.168.1.10:3000/podcasts'));
+    var response = await http.get(Uri.parse('http://192.168.43.59:3000/podcasts'));
 
     if(response.statusCode == 200){
       jsonData = json.decode(response.body);
+      // print(jsonData![0]['artist_name']);
       return jsonData;
     }
   }
@@ -70,8 +73,8 @@ class _PodcastState extends State<Podcast> {
                                     child: GestureDetector(
                                       onTap: (){
                                         showSearch(
-                                          context:context,
-                                          delegate: MySearchDelegate(),
+                                          context: context,
+                                          delegate: MySearchDelegate()
                                         );
                                       },
                                       child: Icon(
@@ -169,7 +172,7 @@ class _PodcastState extends State<Podcast> {
                                                     setState(() {
                                                       // print((json.decode(jsonData![index])).runtimeType);
                                                       Navigator.of(context).push(MaterialPageRoute(
-                                                        builder: (context) => infoPage(value: jsonData![index]['_id'].toString(),id: jsonData![index]['_id'].toString(),name: jsonData![index]['podcast_title'].toString()),
+                                                        builder: (context) => infoPage(id: jsonData![index]['_id'].toString(),name: jsonData![index]['podcast_title'].toString()),
                                                       ));
                                                     });
                                                   },
@@ -395,11 +398,11 @@ class _PodcastState extends State<Podcast> {
 }
 
 class infoPage extends StatefulWidget {
-  final String value;
+  // final String value;
   final String id;
   final String name;
 
-  infoPage({Key? key, required this.value, required this.id, required this.name}) : super(key: key);
+  infoPage({Key? key,required this.id, required this.name}) : super(key: key);
 
   @override
   State<infoPage> createState() => _infoPageState();
@@ -412,7 +415,7 @@ class _infoPageState extends State<infoPage> {
   // String value = '';
   Future printValue() async{
     // print(widget.id);
-    var response = await http.get(Uri.parse('http://192.168.1.10:3000/podcasts/${widget.value}'));
+    var response = await http.get(Uri.parse('http://192.168.43.59:3000/podcasts/${widget.id}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);
@@ -422,7 +425,7 @@ class _infoPageState extends State<infoPage> {
   }
 
   printEpisode(x) async{
-    var response = await http.get(Uri.parse('http://192.168.1.10:3000/episodes/${widget.id}/epsiode/'));
+    var response = await http.get(Uri.parse('http://192.168.43.59:3000/episodes/${widget.id}/epsiode/'));
 
     if(response.statusCode == 200){
       episodes = json.decode(response.body);
@@ -1068,12 +1071,12 @@ class playerPage extends StatefulWidget {
 }
 
 class _playerPageState extends State<playerPage> {
-
+  late AudioPlayer advancedPlayer;
   List? result;
   var episode;
 
   Future printValue() async{
-    var response = await http.get(Uri.parse('http://192.168.1.10:3000/podcasts/${widget.value}'));
+    var response = await http.get(Uri.parse('http://192.168.43.59:3000/podcasts/${widget.value}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);
@@ -1082,7 +1085,7 @@ class _playerPageState extends State<playerPage> {
   }
 
   Future printEpisode() async{
-   var response = await Dio().get('http://192.168.1.10:3000/episodes/${widget.value}/epsiode/${widget.epi}');
+   var response = await Dio().get('http://192.168.43.59:3000/episodes/${widget.value}/epsiode/${widget.epi}');
 
     if(response.statusCode == 200){
       episode = response.data;
@@ -1090,6 +1093,12 @@ class _playerPageState extends State<playerPage> {
     }else{
       print('Wong input');
     }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    advancedPlayer = AudioPlayer();
   }
 
   @override
@@ -1194,13 +1203,8 @@ class _playerPageState extends State<playerPage> {
                                                     ),
                                                   ),
                                                   SizedBox(height:60),
-                                                  Container(
-                                                    child: Column(
-                                                      children: [
-                                                        // Player(path:"assets/audio/${episode['episode_audio']}")
-                                                      ],
-                                                    ),
-                                                  )
+                                                  Player(path:"assets/audio/${episode['episode_audio']}")
+                                                  // Player(path:"assets/audio}")
                                                 ],
                                               ),
                                             );
@@ -1226,7 +1230,17 @@ class _playerPageState extends State<playerPage> {
 }
 
 class FetchedPodcast{
-  var artist_name,podcast_title,podcast_description,image,category,rate;
+  var artist_name,podcast_title,podcast_description,image,category,rate,id;
 
-  FetchedPodcast(this.artist_name, this.podcast_title, this.podcast_description, this.image,this.category,this.rate);
+  FetchedPodcast({required this.artist_name,required this.podcast_title,required this.podcast_description,required this.image,required this.category,required this.rate,required this.id});
+
+  factory FetchedPodcast.fromJson(Map<String, dynamic> json) => FetchedPodcast(
+      id: json['_id'],
+      artist_name: json['artist_name'],
+      podcast_title: json['podcast_title'],
+      podcast_description: json['podcast_description'],
+      image: json['image'],
+      category: json['category'],
+      rate: json['rate'],
+  );
 }

@@ -35,70 +35,60 @@ class _navBarState extends State<navBar> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (BuildContext context) => ThemeProvider(),
-      builder: (context,_){
-
-        final themeProvider = Provider.of<ThemeProvider>(context);
-        return MaterialApp(
-            themeMode: ThemeMode.system,
-            theme: MyTheme.lightTheme,
-            darkTheme: MyTheme.darkTheme,
-            home: Scaffold(
-              body: PageView.builder(
-                  itemCount: 4,
-                  controller: controller,
-                  onPageChanged: (page){
-                    setState(() {
-                      _index = page;
-                    });
-                  },
-                  itemBuilder: (context,position){
-                    return Container(
-                      child: screens[_index],
-                    );
-                  }
+      return MaterialApp(
+          home: Scaffold(
+            body: PageView.builder(
+                itemCount: 4,
+                controller: controller,
+                onPageChanged: (page){
+                  setState(() {
+                    _index = page;
+                  });
+                },
+                itemBuilder: (context,position){
+                  return Container(
+                    child: screens[_index],
+                  );
+                }
+            ),
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.all(5),
+              child: GNav(
+                gap: 8,
+                activeColor: Colors.white,
+                // backgroundColor: Colors.white,
+                tabBackgroundColor: const Color.fromRGBO(248, 135, 88, 1),
+                // tabBackgroundColor: const Color.fromRGBO(253, 157, 92, 1),
+                // tabBackgroundColor: const Color.fromRGBO(234, 92, 78, 1),
+                padding: const EdgeInsets.all(10),
+                tabs: const [
+                  GButton(
+                    icon: FeatherIcons.music,
+                    text: "Music",
+                  ),
+                  GButton(
+                      icon:FeatherIcons.mic,
+                      text: "Podcast"
+                  ),
+                  GButton(
+                      icon:FeatherIcons.bookOpen,
+                      text: "Audiobook"
+                  ),
+                  GButton(
+                      icon: FeatherIcons.archive,
+                      text: "Library"
+                  ),
+                ],
+                selectedIndex: _index,
+                onTabChange: (index){
+                  setState(() {
+                    _index = index;
+                  });
+                  controller.jumpToPage(index);
+                },
               ),
-              bottomNavigationBar: Padding(
-                padding: const EdgeInsets.all(5),
-                child: GNav(
-                  gap: 8,
-                  activeColor: Colors.white,
-                  // backgroundColor: Colors.white,
-                  tabBackgroundColor: const Color.fromRGBO(248, 135, 88, 1),
-                  // tabBackgroundColor: const Color.fromRGBO(253, 157, 92, 1),
-                  // tabBackgroundColor: const Color.fromRGBO(234, 92, 78, 1),
-                  padding: const EdgeInsets.all(10),
-                  tabs: const [
-                    GButton(
-                      icon: FeatherIcons.music,
-                      text: "Music",
-                    ),
-                    GButton(
-                        icon:FeatherIcons.mic,
-                        text: "Podcast"
-                    ),
-                    GButton(
-                        icon:FeatherIcons.bookOpen,
-                        text: "Audiobook"
-                    ),
-                    GButton(
-                        icon: FeatherIcons.archive,
-                        text: "Library"
-                    ),
-                  ],
-                  selectedIndex: _index,
-                  onTabChange: (index){
-                    setState(() {
-                      _index = index;
-                    });
-                    controller.jumpToPage(index);
-                  },
-                ),
-              ),
-            )
-        );
-      },
-    );
+            ),
+          )
+      );
   }
 }
