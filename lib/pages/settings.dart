@@ -1,9 +1,5 @@
-
-import 'package:awud_app/pages/theme.dart';
-import 'package:awud_app/widget/ChangeThemeButtonWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class Setting extends StatelessWidget {
   const Setting({Key? key}) : super(key: key);
@@ -85,7 +81,6 @@ class Setting extends StatelessWidget {
                                       fontWeight: FontWeight.bold
                                   ),
                                 ),
-                                ChangeThemeButtonWidget(),
                               ],
                             ),
                           )

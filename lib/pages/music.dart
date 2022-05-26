@@ -1,6 +1,3 @@
-import 'package:awud_app/pages/search.dart';
-import 'package:awud_app/pages/theme.dart';
-import 'package:awud_app/widget/ChangeThemeButtonWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,7 +35,8 @@ class Music extends StatelessWidget {
                         "Music",
                         style: TextStyle(
                             fontSize: 35,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black
                         ),
                       ),
                       actions: [

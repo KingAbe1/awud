@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'audio_file.dart';
+import '../class/audio_file.dart';
 import 'search.dart';
 import 'package:http/http.dart' as http;
 // import 'podcast_search.dart';
@@ -25,7 +25,7 @@ class _PodcastState extends State<Podcast> {
   List? episodes;
   // String value = '';
   Future getPodcast() async{
-    var response = await http.get(Uri.parse('http://192.168.43.59:3000/podcasts'));
+    var response = await http.get(Uri.parse('http://192.168.43.127:3000/podcasts'));
 
     if(response.statusCode == 200){
       jsonData = json.decode(response.body);
@@ -415,7 +415,7 @@ class _infoPageState extends State<infoPage> {
   // String value = '';
   Future printValue() async{
     // print(widget.id);
-    var response = await http.get(Uri.parse('http://192.168.43.59:3000/podcasts/${widget.id}'));
+    var response = await http.get(Uri.parse('http://192.168.43.127:3000/podcasts/${widget.id}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);
@@ -425,7 +425,7 @@ class _infoPageState extends State<infoPage> {
   }
 
   printEpisode(x) async{
-    var response = await http.get(Uri.parse('http://192.168.43.59:3000/episodes/${widget.id}/epsiode/'));
+    var response = await http.get(Uri.parse('http://192.168.43.127:3000/episodes/${widget.id}/epsiode/'));
 
     if(response.statusCode == 200){
       episodes = json.decode(response.body);
@@ -1076,7 +1076,7 @@ class _playerPageState extends State<playerPage> {
   var episode;
 
   Future printValue() async{
-    var response = await http.get(Uri.parse('http://192.168.43.59:3000/podcasts/${widget.value}'));
+    var response = await http.get(Uri.parse('http://192.168.43.127:3000/podcasts/${widget.value}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);
@@ -1085,7 +1085,7 @@ class _playerPageState extends State<playerPage> {
   }
 
   Future printEpisode() async{
-   var response = await Dio().get('http://192.168.43.59:3000/episodes/${widget.value}/epsiode/${widget.epi}');
+   var response = await Dio().get('http://192.168.43.127:3000/episodes/${widget.value}/epsiode/${widget.epi}');
 
     if(response.statusCode == 200){
       episode = response.data;
@@ -1193,17 +1193,19 @@ class _playerPageState extends State<playerPage> {
                                                     style: TextStyle(
                                                       fontSize:30,
                                                       fontWeight: FontWeight.bold,
+                                                      color: Colors.white
                                                     ),
                                                   ),
                                                   Text(
                                                     result![0]['podcast_title'].toString(),
                                                     style: TextStyle(
-                                                      fontSize:20,
+                                                      fontSize:17,
+                                                        color: Colors.grey
                                                       // fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
                                                   SizedBox(height:60),
-                                                  Player(path:"assets/audio/${episode['episode_audio']}")
+                                                  MyAp(path:"assets/audio/${episode['episode_audio']}")
                                                   // Player(path:"assets/audio}")
                                                 ],
                                               ),
