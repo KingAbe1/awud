@@ -5,7 +5,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import "package:awud_app/pages/music.dart";
 import "package:awud_app/pages/podcast.dart";
 import "package:awud_app/pages/audiobook.dart";
-import "package:awud_app/pages/favuorite.dart";
+import "package:awud_app/pages/library.dart";
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 

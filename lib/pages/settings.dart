@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Setting extends StatelessWidget {
@@ -23,7 +22,7 @@ class Setting extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 35,
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor,
+                            color: Colors.black,
                           ),
                         ),
                       ),

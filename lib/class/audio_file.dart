@@ -27,6 +27,8 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 // void main() => runApp(MyApp());
 
+late AudioPlayer _audioPlayer;
+
 class MyAp extends StatefulWidget {
   final String path;
   const MyAp({Key? key, required this.path}) : super(key: key);
@@ -55,6 +57,7 @@ class _MyApState extends State<MyAp> {
 
   @override
   Widget build(BuildContext context) {
+    // String dropdownValue = '1.0x';
     return  Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -169,6 +172,27 @@ class AudioControlButtons extends StatelessWidget {
   }
 }
 
+// Widget _repeatButton(BuildContext context, LoopMode loopMode) {
+//   final icons = [
+//     Icon(Icons.repeat),
+//     Icon(Icons.repeat, color: Theme.of(context).accentColor),
+//     Icon(Icons.repeat_one, color: Theme.of(context).accentColor),
+//   ];
+//   const cycleModes = [
+//     LoopMode.off,
+//     LoopMode.all,
+//     LoopMode.one,
+//   ];
+//   final index = cycleModes.indexOf(loopMode);
+//   return IconButton(
+//     icon: icons[index],
+//     onPressed: () {
+//       _audioPlayer.setLoopMode(
+//           cycleModes[(cycleModes.indexOf(loopMode) + 1) % cycleModes.length]);
+//     },
+//   );
+// }
+
 class RepeatButton extends StatelessWidget {
   const RepeatButton({Key? key}) : super(key: key);
   @override
@@ -197,6 +221,13 @@ class RepeatButton extends StatelessWidget {
   }
 }
 
+
+// Widget _previousButton() {
+//   return IconButton(
+//     icon: Icon(Icons.skip_previous),
+//     onPressed: _audioPlayer.hasPrevious ? _audioPlayer.seekToPrevious : null,
+//   );
+// }
 class PreviousSongButton extends StatelessWidget {
   const PreviousSongButton({Key? key}) : super(key: key);
   @override
@@ -206,8 +237,7 @@ class PreviousSongButton extends StatelessWidget {
       builder: (_, isFirst, __) {
         return IconButton(
           icon: Icon(Icons.skip_previous),
-          onPressed:
-          (isFirst) ? null : _pageManager!.onPreviousSongButtonPressed,
+          onPressed: _pageManager!.onPreviousSongButtonPressed,
         );
       },
     );
@@ -247,6 +277,13 @@ class PlayButton extends StatelessWidget {
   }
 }
 
+
+// Widget _nextButton() {
+//   return IconButton(
+//     icon: Icon(Icons.skip_next),
+//     onPressed: _audioPlayer.hasNext ? _audioPlayer.seekToNext : null,
+//   );
+// }
 class NextSongButton extends StatelessWidget {
   const NextSongButton({Key? key}) : super(key: key);
   @override
@@ -262,6 +299,8 @@ class NextSongButton extends StatelessWidget {
     );
   }
 }
+
+
 
 class ShuffleButton extends StatelessWidget {
   const ShuffleButton({Key? key}) : super(key: key);
@@ -339,8 +378,6 @@ class PageManager {
   final playButtonNotifier = PlayButtonNotifier();
   final isLastSongNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
-
-  late AudioPlayer _audioPlayer;
 
   PageManager(path) {
     String p=path;
@@ -440,22 +477,65 @@ class PageManager {
   }
 
   void onRepeatButtonPressed() {
-    // TODO
+    repeatButtonNotifier.nextState();
+    switch (repeatButtonNotifier.value) {
+      case RepeatState.off:
+        _audioPlayer.setLoopMode(LoopMode.off);
+        break;
+      case RepeatState.repeatSong:
+        _audioPlayer.setLoopMode(LoopMode.one);
+        break;
+      case RepeatState.repeatPlaylist:
+        _audioPlayer.setLoopMode(LoopMode.all);
+    }
+
+    // _audioPlayer.setLoopMode();
+    //_audioPlayer.loopMode;
+    // const cycleModes = [
+    //   LoopMode.off,
+    //   LoopMode.all,
+    //   LoopMode.one,
+    // ];
+    // _audioPlayer.setLoopMode(
+    //     cycleModes[(cycleModes.indexOf(loopMode) + 1) % cycleModes.length]);
   }
 
   void onPreviousSongButtonPressed() {
-    // TODO
+    _audioPlayer.seekToPrevious();
+    //print('fgsjkdjglkdffjdghbjkdfbgdfhvbhjkjsldvbksslbnkshrggcvn');
+    // _audioPlayer.hasPrevious ? _audioPlayer.seekToPrevious : print('no previous');
   }
 
   void onNextSongButtonPressed() {
-    // TODO
+    _audioPlayer.seekToNext();
+    // _audioPlayer.hasNext ? _audioPlayer.seekToNext : null;
   }
-
+// Widget _shuffleButton(BuildContext context, bool isEnabled) {
+//   return IconButton(
+//     icon: isEnabled
+//         ? Icon(Icons.shuffle, color: Theme.of(context).accentColor)
+//         : Icon(Icons.shuffle),
+//     onPressed: () async {
+//       final enable = !isEnabled;
+//       if (enable) {
+//         await _audioPlayer.shuffle();
+//       }
+//       await _audioPlayer.setShuffleModeEnabled(enable);
+//     },
+//   );
+// }
   void onShuffleButtonPressed() async {
-    // TODO
+    final enable = !_audioPlayer.shuffleModeEnabled;
+    if (enable) {
+      await _audioPlayer.shuffle();
+    }
+    await _audioPlayer.setShuffleModeEnabled(enable);
   }
 
   void addSong() {
+    // _audioPlayer.speed;
+     AudioPlayer audioPlayers = AudioPlayer();
+    // audioPlayers.setPlaybackRate(playbackRate: 1.0);
     // TODO
   }
 

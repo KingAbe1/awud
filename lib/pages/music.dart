@@ -1,19 +1,52 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-import 'settings.dart';
+import 'dart:convert';
 
-class Music extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'notifications.dart';
+import 'settings.dart';
+import 'package:http/http.dart' as http;
+
+class Music extends StatefulWidget {
   const Music({Key? key}) : super(key: key);
 
   @override
+  State<Music> createState() => _MusicState();
+}
+
+class _MusicState extends State<Music> {
+  List? jsonData;
+
+  List? episodes;
+
+  Future getPodcast() async{
+    var response = await http.get(Uri.parse('http://192.168.43.128:5000/music'));
+
+    if(response.statusCode == 200){
+      jsonData = json.decode(response.body);
+      return jsonData;
+    }
+  }
+
+  Future getAlbum() async{
+    var response = await http.get(Uri.parse('http://192.168.43.128:5000/album'));
+
+    if(response.statusCode == 200){
+      jsonData = json.decode(response.body);
+      return jsonData;
+    }
+  }
+
+  @override
+  void initState() {
+    getPodcast();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-      return GetMaterialApp(
+      return MaterialApp(
           routes: {
-            '/notification': (context) => Notification(),
+            '/notification': (context) => Notifications(),
             '/setting': (context) => Setting()
           },
           theme: ThemeData(
@@ -92,8 +125,8 @@ class Music extends StatelessWidget {
                 ],
                 body: SafeArea(
                   child: Container(
-                    // color: Colors.white,
-                    margin: const EdgeInsets.only(left: 5,right: 5),
+                    color: Colors.white,
+                    margin: EdgeInsets.only(left: 5,right: 5),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
                       child: Column(
@@ -102,8 +135,7 @@ class Music extends StatelessWidget {
                             margin: EdgeInsets.only(top: 20,left: 5),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: const Text(
-                                "Recently Played",
+                              child: Text('Recently played',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -111,1243 +143,217 @@ class Music extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Container(
-                              margin: const EdgeInsets.only(top: 10),
-                              child: Row(
-                                children: [
-                                  Card(
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        print("hello");
-                                      },
-                                      child: Stack(
-                                          alignment:Alignment.center,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.circular(5),
-                                              child: Image.asset("assets/images/channels4_profile (2).jpg",
-                                                height: 100,
-                                                width: 100,
-                                                fit: BoxFit.fill,
-                                              ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            height: 153,
+                            child: FutureBuilder(
+                              future: getPodcast(),
+                              builder: (context,snapshot){
+                                if(snapshot.connectionState == ConnectionState.none && snapshot.hasData == null){
+                                  return Container(
+                                    child: Text('No Data'),
+                                  );
+                                }
+                                else if(snapshot.connectionState == ConnectionState.waiting){
+                                  return Container(
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          color: Color.fromRGBO(248, 135, 88, 1),
+                                        ),
+                                      )
+                                  );
+                                }else{
+                                  return ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: jsonData == null ? 0: jsonData!.length,
+                                      itemBuilder: (BuildContext context, int index){
+                                        return Container(
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Column(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    // setState(() {
+                                                    //   // print((json.decode(jsonData![index])).runtimeType);
+                                                    //   Navigator.of(context).push(MaterialPageRoute(
+                                                    //     builder: (context) => infoPage(id: jsonData![index]['_id'].toString(),name: jsonData![index]['podcast_title'].toString()),
+                                                    //   ));
+                                                    // });
+                                                  },
+                                                  child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(5),
+                                                      child: Image.asset(
+                                                        '${jsonData![index]['image']}',
+                                                        height: 100,
+                                                        width: 100,
+                                                        fit: BoxFit.fill,
+                                                      )
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  jsonData![index]['title'],
+                                                  style: TextStyle(
+                                                      fontSize: 15
+                                                  ),
+                                                ),
+                                                SizedBox(height: 5),
+                                                Text(
+                                                  jsonData![index]['artist_name'],
+                                                  style: TextStyle(
+                                                      color: Colors.grey
+                                                  ),
+                                                ),
+                                                SizedBox(width: 110)
+                                              ],
                                             ),
-                                            // InkWell(
-                                            //   child: const FaIcon(
-                                            //     FontAwesomeIcons.play,
-                                            //     color: Colors.white,
-                                            //   ),
-                                            //   onTap: (){
-                                            //     print("recently played");
-                                            //   },
-                                            // )
-                                          ]
-                                      ),
-                                    ),
-                                  ),
-                                  Card(
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        print("hello");
-                                      },
-                                      child: Stack(
-                                          alignment:Alignment.center,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.circular(5),
-                                              child: Image.asset("assets/images/channels4_profile (2).jpg",
-                                                height: 100,
-                                                width: 100,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                            // InkWell(
-                                            //   child: const FaIcon(
-                                            //     FontAwesomeIcons.play,
-                                            //     color: Colors.white,
-                                            //   ),
-                                            //   onTap: (){
-                                            //     print("recently played");
-                                            //   },
-                                            // )
-                                          ]
-                                      ),
-                                    ),
-                                  ),
-                                  Card(
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        print("hello");
-                                      },
-                                      child: Stack(
-                                          alignment:Alignment.center,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.circular(5),
-                                              child: Image.asset("assets/images/channels4_profile (2).jpg",
-                                                height: 100,
-                                                width: 100,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                            // InkWell(
-                                            //   child: const FaIcon(
-                                            //     FontAwesomeIcons.play,
-                                            //     color: Colors.white,
-                                            //   ),
-                                            //   onTap: (){
-                                            //     print("recently played");
-                                            //   },
-                                            // )
-                                          ]
-                                      ),
-                                    ),
-                                  ),
-                                  Card(
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        print("hello");
-                                      },
-                                      child: Stack(
-                                          alignment:Alignment.center,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.circular(5),
-                                              child: Image.asset("assets/images/channels4_profile (2).jpg",
-                                                height: 100,
-                                                width: 100,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                            // InkWell(
-                                            //   child: const FaIcon(
-                                            //     FontAwesomeIcons.play,
-                                            //     color: Colors.white,
-                                            //   ),
-                                            //   onTap: (){
-                                            //     print("recently played");
-                                            //   },
-                                            // )
-                                          ]
-                                      ),
-                                    ),
-                                  ),
-                                  Card(
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        print("hello");
-                                      },
-                                      child: Stack(
-                                          alignment:Alignment.center,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.circular(5),
-                                              child: Image.asset("assets/images/channels4_profile (2).jpg",
-                                                height: 100,
-                                                width: 100,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                            // InkWell(
-                                            //   child: const FaIcon(
-                                            //     FontAwesomeIcons.play,
-                                            //     color: Colors.white,
-                                            //   ),
-                                            //   onTap: (){
-                                            //     print("recently played");
-                                            //   },
-                                            // )
-                                          ]
-                                      ),
-                                    ),
-                                  ),
-                                  Card(
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        print("hello");
-                                      },
-                                      child: Stack(
-                                          alignment:Alignment.center,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.circular(5),
-                                              child: Image.asset("assets/images/channels4_profile (2).jpg",
-                                                height: 100,
-                                                width: 100,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                            // InkWell(
-                                            //   child: const FaIcon(
-                                            //     FontAwesomeIcons.play,
-                                            //     color: Colors.white,
-                                            //   ),
-                                            //   onTap: (){
-                                            //     print("recently played");
-                                            //   },
-                                            // )
-                                          ]
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                          ),
+                                        );
+                                      }
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20,left: 5),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Album\'s you\'ll love',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20
+                                ),
+                              ),
+                            ),
+                          ),
+                          GridView.count(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 4.0,
+                            mainAxisSpacing: 8.0,
+                            children: [
+                              FutureBuilder(
+                                future: getAlbum(),
+                                builder: (context,snapshot){
+                                  if(snapshot.connectionState == ConnectionState.none && snapshot.hasData == null){
+                                    return Container(
+                                      child: Text('No Data'),
+                                    );
+                                  }
+                                  else if(snapshot.connectionState == ConnectionState.waiting){
+                                    return Container(
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: Color.fromRGBO(248, 135, 88, 1),
+                                          ),
+                                        )
+                                    );
+                                  }else{
+                                    return Container(
+
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20,left: 5),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Entertainment',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20
+                                ),
                               ),
                             ),
                           ),
                           Container(
-                            margin: const EdgeInsets.only(top: 40),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin:EdgeInsets.only(left: 5),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: const Text("Music you'll love",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Card(
-                                                child: Stack(
-                                                    alignment:Alignment.center,
-                                                    children: [
-                                                      ClipRRect(
-                                                          borderRadius: BorderRadius.circular(5),
-                                                          child: Image.asset("assets/images/telahun.jpg",
-                                                            height: 165,
-                                                            width: 165,
-                                                            fit: BoxFit.fitWidth,
-                                                          )
-                                                      ),InkWell(
-                                                        child: const FaIcon(
-                                                          FontAwesomeIcons.play,
-                                                          color: Colors.white,
-                                                        ),
-                                                        onTap: (){
-                                                          print("recently played");
-                                                        },
-                                                      )
-                                                    ]
-                                                )
-                                            ),
-                                            Card(
-                                                child: Stack(
-                                                    alignment:Alignment.center,
-                                                    children: [
-                                                      ClipRRect(
-                                                          borderRadius: BorderRadius.circular(5),
-                                                          child: Image.asset("assets/images/telahun.jpg",
-                                                            height: 165,
-                                                            width: 165,
-                                                            fit: BoxFit.fitWidth,
-                                                          )
-                                                      ),InkWell(
-                                                        child: const FaIcon(
-                                                          FontAwesomeIcons.play,
-                                                          color: Colors.white,
-                                                        ),
-                                                        onTap: (){
-                                                          print("recently played");
-                                                        },
-                                                      )
-                                                    ]
-                                                )
-                                            ),
-
-                                          ],
+                            margin: EdgeInsets.only(top: 10),
+                            height: 150,
+                            child: FutureBuilder(
+                              future: getPodcast(),
+                              builder: (context,snapshot){
+                                if(snapshot.connectionState == ConnectionState.none && snapshot.hasData == null){
+                                  return Container(
+                                    child: Text('No Data'),
+                                  );
+                                }
+                                else if(snapshot.connectionState == ConnectionState.waiting){
+                                  return Container(
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          color: Color.fromRGBO(248, 135, 88, 1),
                                         ),
-                                        SizedBox(height: 15),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Card(
-                                                child: Stack(
-                                                    alignment:Alignment.center,
-                                                    children: [
-                                                      ClipRRect(
-                                                          borderRadius: BorderRadius.circular(5),
-                                                          child: Image.asset("assets/images/telahun.jpg",
-                                                            height: 165,
-                                                            width: 165,
-                                                            fit: BoxFit.fitWidth,
-                                                          )
-                                                      ),InkWell(
-                                                        child: const FaIcon(
-                                                          FontAwesomeIcons.play,
-                                                          color: Colors.white,
-                                                        ),
-                                                        onTap: (){
-                                                          print("recently played");
-                                                        },
-                                                      )
-                                                    ]
-                                                )
-                                            ),
-                                            Card(
-                                                child: Stack(
-                                                    alignment:Alignment.center,
-                                                    children: [
-                                                      ClipRRect(
-                                                          borderRadius: BorderRadius.circular(5),
-                                                          child: Image.asset("assets/images/telahun.jpg",
-                                                            height: 165,
-                                                            width: 165,
-                                                            fit: BoxFit.fitWidth,
-                                                          )
-                                                      ),InkWell(
-                                                        child: const FaIcon(
-                                                          FontAwesomeIcons.play,
-                                                          color: Colors.white,
-                                                        ),
-                                                        onTap: (){
-                                                          print("recently played");
-                                                        },
-                                                      )
-                                                    ]
-                                                )
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    )
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 40),
-                            child: Column(
-                              children: [
-                                Container(
-                                    margin:EdgeInsets.only(left: 5),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text("You might love",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20
-                                          ),
-                                        )
-                                    )
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(top: 20),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap:(){
-                                                print('HI');
-                                              },
-                                              child: CircleAvatar(
-                                                backgroundImage: AssetImage('assets/images/lij_michael.jpg'),
-                                                radius: 70,
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Text("Lij Michael",
-                                              style: TextStyle(
-                                                  fontSize: 15
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(width: 10),
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap:(){
-                                                print('HI');
-                                              },
-                                              child: CircleAvatar(
-                                                backgroundImage: AssetImage('assets/images/lij_michael.jpg'),
-                                                radius: 70,
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Text("Lij Michael",
-                                                style: TextStyle(
-                                                    fontSize: 15
-                                                )
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(width: 10),
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap:(){
-                                                print('HI');
-                                              },
-                                              child: CircleAvatar(
-                                                backgroundImage: AssetImage('assets/images/lij_michael.jpg'),
-                                                radius: 70,
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Text("Lij Michael",
-                                                style: TextStyle(
-                                                    fontSize: 15
-                                                )
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(width: 10),
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap:(){
-                                                print('HI');
-                                              },
-                                              child: CircleAvatar(
-                                                backgroundImage: AssetImage('assets/images/lij_michael.jpg'),
-                                                radius: 70,
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Text("Lij Michael",
-                                                style: TextStyle(
-                                                    fontSize: 15
-                                                )
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 40),
-                            child: Column(
-                              children: [
-                                Container(
-                                    margin:EdgeInsets.only(left: 5),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text("All categories",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        )
-                                    )
-                                ),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: Row(
-                                      children: [
-                                        Card(
-                                          child: GestureDetector(
-                                            onTap: (){
-                                              print('Hello');
-                                            },
-                                            child: Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  child: Image.asset("assets/images/istockphoto-1197828995-612x612.jpg",
-                                                    width: 200,
-                                                    height: 80,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                                Text("New Release",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 18
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Card(
-                                          child: GestureDetector(
-                                            onTap: (){
-                                              print('Hello');
-                                            },
-                                            child: Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  child: Image.asset("assets/images/istockphoto-1197828995-612x612.jpg",
-                                                    width: 200,
-                                                    height: 80,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                                Text("Charts",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 18
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Card(
-                                          child: GestureDetector(
-                                            onTap: (){
-                                              print('Hello');
-                                            },
-                                            child: Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  child: Image.asset("assets/images/istockphoto-1197828995-612x612.jpg",
-                                                    width: 200,
-                                                    height: 80,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                                Text("Essentials",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 18
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                            foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                          ),
-                                          onPressed: () { },
-                                          child: Text('Show all',
-                                            style: TextStyle(
-                                                color: Colors.black54,
-                                                fontSize: 16
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-
-                          Container(
-                            margin: EdgeInsets.only(top: 40),
-                            child: Column(
-                              children: [
-                                Container(
-                                    margin: EdgeInsets.only(left: 5),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text("New Release for you",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20
-                                          ),
-                                        )
-                                    )
-                                ),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Container(
-                                    margin: const EdgeInsets.only(top: 20),
-                                    child: Row(
-                                      children: [
-                                        Card(
-                                            elevation: 0,
-                                            child: Column(
-                                              children: [
-                                                Stack(
-                                                    alignment:Alignment.center,
-                                                    children: [
-                                                      ClipRRect(
+                                      )
+                                  );
+                                }else{
+                                  return ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: jsonData == null ? 0: jsonData!.length,
+                                      itemBuilder: (BuildContext context, int index){
+                                        if((jsonData![index]['category']).contains('Entertainment')){
+                                          return Container(
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        print(jsonData![index]['podcast_title']);
+                                                      });
+                                                    },
+                                                    child: ClipRRect(
                                                         borderRadius: BorderRadius.circular(5),
-                                                        child: Image.asset("assets/images/teddy.jpg",
-                                                          height: 150,
-                                                          width: 150,
-                                                          fit: BoxFit.fitWidth,
-                                                        ),
-                                                      ),
-                                                      InkWell(
-                                                        child: const FaIcon(
-                                                          FontAwesomeIcons.play,
-                                                          color: Colors.white,
-                                                        ),
-                                                        onTap: (){
-                                                          print("recently played");
-                                                        },
-                                                      )
-                                                    ]
-                                                ),
-                                                SizedBox(height: 10),
-                                                Text("Ethiopia",
-                                                  style: TextStyle(
-                                                      fontSize: 16
+                                                        child: Image.asset(
+                                                          '${jsonData![index]['image']}',
+                                                          height: 100,
+                                                          width: 100,
+                                                          fit: BoxFit.fill,
+                                                        )
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(height: 10),
-                                                Text("Teddy Afro",
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 15
+                                                  SizedBox(height: 10),
+                                                  Text(
+                                                    jsonData![index]['podcast_title'],
+                                                    style: TextStyle(
+                                                        fontSize: 15
+                                                    ),
                                                   ),
-                                                )
-                                              ],
-                                            )
-                                        ),
-                                        Card(
-                                            elevation: 0,
-                                            child: Column(
-                                              children: [
-                                                Stack(
-                                                    alignment:Alignment.center,
-                                                    children: [
-                                                      ClipRRect(
-                                                        borderRadius: BorderRadius.circular(5),
-                                                        child: Image.asset("assets/images/teddy.jpg",
-                                                          height: 150,
-                                                          width: 150,
-                                                          fit: BoxFit.fitWidth,
-                                                        ),
-                                                      ),
-                                                      InkWell(
-                                                        child: const FaIcon(
-                                                          FontAwesomeIcons.play,
-                                                          color: Colors.white,
-                                                        ),
-                                                        onTap: (){
-                                                          print("recently played");
-                                                        },
-                                                      )
-                                                    ]
-                                                ),
-                                                SizedBox(height: 10),
-                                                Text("Ethiopia",
-                                                  style: TextStyle(
-                                                      fontSize: 16
+                                                  SizedBox(height: 5),
+                                                  Text(
+                                                    jsonData![index]['artist_name'],
+                                                    style: TextStyle(
+                                                        color: Colors.grey
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(height: 10),
-                                                Text("Teddy Afro",
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 15
-                                                  ),
-                                                )
-                                              ],
-                                            )
-                                        ),
-                                        Card(
-                                            elevation: 0,
-                                            child: Column(
-                                              children: [
-                                                Stack(
-                                                    alignment:Alignment.center,
-                                                    children: [
-                                                      ClipRRect(
-                                                        borderRadius: BorderRadius.circular(5),
-                                                        child: Image.asset("assets/images/teddy.jpg",
-                                                          height: 150,
-                                                          width: 150,
-                                                          fit: BoxFit.fitWidth,
-                                                        ),
-                                                      ),
-                                                      InkWell(
-                                                        child: const FaIcon(
-                                                          FontAwesomeIcons.play,
-                                                          color: Colors.white,
-                                                        ),
-                                                        onTap: (){
-                                                          print("recently played");
-                                                        },
-                                                      )
-                                                    ]
-                                                ),
-                                                SizedBox(height: 10),
-                                                Text("Ethiopia",
-                                                  style: TextStyle(
-                                                      fontSize: 16
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10),
-                                                Text("Teddy Afro",
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 15
-                                                  ),
-                                                )
-                                              ],
-                                            )
-
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Container(
-                            margin: EdgeInsets.only(top: 40),
-                            child: Column(
-                              children: [
-                                Container(
-                                    margin:EdgeInsets.only(left: 5),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text("Geners",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        )
-                                    )
-                                ),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: Row(
-                                      children: [
-                                        Card(
-                                          child: Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              InkWell(
-                                                onTap: (){
-                                                  print("recently played");
-                                                },
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  child: Image.asset("assets/images/37723595.jpg",
-                                                    width: 200,
-                                                    height: 80,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
+                                                  SizedBox(width: 110)
+                                                ],
                                               ),
-                                              Text("R&B",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Card(
-                                          child: Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              InkWell(
-                                                onTap: (){
-                                                  print("recently played");
-                                                },
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  child: Image.asset("assets/images/37723595.jpg",
-                                                    width: 200,
-                                                    height: 80,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text("French Music",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Card(
-                                          child: Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              InkWell(
-                                                onTap: (){
-                                                  print("recently played");
-                                                },
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  child: Image.asset("assets/images/37723595.jpg",
-                                                    width: 200,
-                                                    height: 80,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text("Pop",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                            foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                          ),
-                                          onPressed: () { },
-                                          child: Text('Show all',
-                                            style: TextStyle(
-                                                color: Colors.black54,
-                                                fontSize: 16
                                             ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
+                                          );
+                                        }else{
+                                          return Container();
+                                        }
+                                      }
+                                  );
+                                }
+                              },
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                ),
+                )
               ),
             ),
           )
       );
-  }
-}
-
-class Notification extends StatefulWidget {
-  const Notification({Key? key}) : super(key: key);
-
-  @override
-  _NotificationState createState() => _NotificationState();
-}
-
-class _NotificationState extends State<Notification> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            body: SafeArea(
-              child: NestedScrollView(
-                floatHeaderSlivers: true,
-                headerSliverBuilder: (context, innerBoxIsScrolled) =>
-                [
-                  SliverOverlapAbsorber(
-                    handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                    sliver: SliverAppBar(
-                      elevation: 0,
-                      backgroundColor: Colors.white,
-                      title: const Text(
-                        "Notifications",
-                        style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-                body: SafeArea(
-                  child: Container(
-                    margin: EdgeInsets.only(left: 5),
-                    color: Colors.white,
-                    child: ListView(
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Card(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Image.asset(
-                                      "assets/images/telahun.jpg",
-                                      height: 70,
-                                      width: 70,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 15),
-                                Column(
-                                  children: [
-                                    Text(
-                                      'Emaya Ethiopia',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Tilahun Gessesse',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 15
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(left: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  '8 HOURS AGO - NEW SINGLE',
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              color: Colors.black12,
-                              height: 1,
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Card(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Image.asset(
-                                      "assets/images/telahun.jpg",
-                                      height: 70,
-                                      width: 70,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 15),
-                                Column(
-                                  children: [
-                                    Text(
-                                      'Emaya Ethiopia',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Tilahun Gessesse',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 15
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(left: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  '8 HOURS AGO - NEW SINGLE',
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              color: Colors.black12,
-                              height: 1,
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Card(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Image.asset(
-                                      "assets/images/telahun.jpg",
-                                      height: 70,
-                                      width: 70,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 15),
-                                Column(
-                                  children: [
-                                    Text(
-                                      'Emaya Ethiopia',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Tilahun Gessesse',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 15
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(left: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  '8 HOURS AGO - NEW SINGLE',
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              color: Colors.black12,
-                              height: 1,
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Card(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Image.asset(
-                                      "assets/images/telahun.jpg",
-                                      height: 70,
-                                      width: 70,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 15),
-                                Column(
-                                  children: [
-                                    Text(
-                                      'Emaya Ethiopia',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Tilahun Gessesse',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 15
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(left: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  '8 HOURS AGO - NEW SINGLE',
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              color: Colors.black12,
-                              height: 1,
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Card(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Image.asset(
-                                      "assets/images/telahun.jpg",
-                                      height: 70,
-                                      width: 70,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 15),
-                                Column(
-                                  children: [
-                                    Text(
-                                      'Emaya Ethiopia',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Tilahun Gessesse',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 15
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(left: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  '8 HOURS AGO - NEW SINGLE',
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              color: Colors.black12,
-                              height: 1,
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Card(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Image.asset(
-                                      "assets/images/telahun.jpg",
-                                      height: 70,
-                                      width: 70,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 15),
-                                Column(
-                                  children: [
-                                    Text(
-                                      'Emaya Ethiopia',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Tilahun Gessesse',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 15
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(left: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  '8 HOURS AGO - NEW SINGLE',
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5),
-                              color: Colors.black12,
-                              height: 1,
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            )
-        )
-    );
   }
 }

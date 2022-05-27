@@ -1,13 +1,13 @@
 import 'dart:convert';
-import 'package:awud_app/model/podcastModel.dart';
+import 'package:awud_app/model/audiobookModel.dart';
 import 'package:http/http.dart' as http;
 
 class BooksApi {
   var data = [];
-  List<FetchedPodcast> results = [];
-  String urlList = 'http://192.168.43.128:5000/podcast';
+  List<FetchedAudiobook> results = [];
+  String urlList = 'http://192.168.43.128:5000/audiobook';
 
-  Future<List<FetchedPodcast>> getuserList({String? query}) async {
+  Future<List<FetchedAudiobook>> getPodcastList({String? query}) async {
     var url = Uri.parse(urlList);
 
     try {
@@ -15,9 +15,9 @@ class BooksApi {
       var response = await http.get(url);
       if (response.statusCode == 200) {
         data = json.decode(response.body);
-        results = data.map((e) => FetchedPodcast.fromJson(e)).toList();
+        results = data.map((e) => FetchedAudiobook.fromJson(e)).toList();
         if (query!= null){
-          results = results.where((element) => element.podcast_title!.toLowerCase().contains((query.toLowerCase()))).toList();
+          results = results.where((element) => element.audiobook_title!.toLowerCase().contains((query.toLowerCase()))).toList();
           print(results);
         }
       } else {
