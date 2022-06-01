@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:awud_app/class/infoPageMusic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'notifications.dart';
@@ -14,16 +14,16 @@ class Music extends StatefulWidget {
 }
 
 class _MusicState extends State<Music> {
-  List? jsonData;
+  List? music;
 
-  List? episodes;
+  List? album;
 
   Future getPodcast() async{
     var response = await http.get(Uri.parse('http://192.168.43.128:5000/music'));
 
     if(response.statusCode == 200){
-      jsonData = json.decode(response.body);
-      return jsonData;
+      music = json.decode(response.body);
+      return music;
     }
   }
 
@@ -31,8 +31,8 @@ class _MusicState extends State<Music> {
     var response = await http.get(Uri.parse('http://192.168.43.128:5000/album'));
 
     if(response.statusCode == 200){
-      jsonData = json.decode(response.body);
-      return jsonData;
+      album = json.decode(response.body);
+      return album;
     }
   }
 
@@ -63,7 +63,7 @@ class _MusicState extends State<Music> {
                     NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                     sliver: SliverAppBar(
                       elevation: 0,
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: Colors.white,
                       title: Text(
                         "Music",
                         style: TextStyle(
@@ -166,7 +166,7 @@ class _MusicState extends State<Music> {
                                   return ListView.builder(
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: jsonData == null ? 0: jsonData!.length,
+                                      itemCount: music == null ? 0: music!.length,
                                       itemBuilder: (BuildContext context, int index){
                                         return Container(
                                           child: SingleChildScrollView(
@@ -175,17 +175,16 @@ class _MusicState extends State<Music> {
                                               children: [
                                                 GestureDetector(
                                                   onTap: (){
-                                                    // setState(() {
-                                                    //   // print((json.decode(jsonData![index])).runtimeType);
-                                                    //   Navigator.of(context).push(MaterialPageRoute(
-                                                    //     builder: (context) => infoPage(id: jsonData![index]['_id'].toString(),name: jsonData![index]['podcast_title'].toString()),
-                                                    //   ));
-                                                    // });
+                                                    setState(() {
+                                                      Navigator.of(context).push(MaterialPageRoute(
+                                                        builder: (context) => infoPage(id: music![index]['_id'].toString(),name: music![index]['title'].toString()),
+                                                      ));
+                                                    });
                                                   },
                                                   child: ClipRRect(
                                                       borderRadius: BorderRadius.circular(5),
                                                       child: Image.asset(
-                                                        '${jsonData![index]['image']}',
+                                                        '${music![index]['image']}',
                                                         height: 100,
                                                         width: 100,
                                                         fit: BoxFit.fill,
@@ -194,14 +193,14 @@ class _MusicState extends State<Music> {
                                                 ),
                                                 SizedBox(height: 10),
                                                 Text(
-                                                  jsonData![index]['title'],
+                                                  music![index]['title'],
                                                   style: TextStyle(
                                                       fontSize: 15
                                                   ),
                                                 ),
                                                 SizedBox(height: 5),
                                                 Text(
-                                                  jsonData![index]['artist_name'],
+                                                  music![index]['artist_name'],
                                                   style: TextStyle(
                                                       color: Colors.grey
                                                   ),
@@ -229,41 +228,74 @@ class _MusicState extends State<Music> {
                               ),
                             ),
                           ),
-                          GridView.count(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 4.0,
-                            mainAxisSpacing: 8.0,
-                            children: [
-                              FutureBuilder(
-                                future: getAlbum(),
-                                builder: (context,snapshot){
-                                  if(snapshot.connectionState == ConnectionState.none && snapshot.hasData == null){
-                                    return Container(
-                                      child: Text('No Data'),
-                                    );
-                                  }
-                                  else if(snapshot.connectionState == ConnectionState.waiting){
-                                    return Container(
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: Color.fromRGBO(248, 135, 88, 1),
-                                          ),
-                                        )
-                                    );
-                                  }else{
-                                    return Container(
-
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
+                          Container(
+                            margin: EdgeInsets.only(top: 10,left: 15),
+                            height: 100,
+                            child: GridView.count(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 0,
+                              mainAxisSpacing: 0,
+                              children: [
+                                FutureBuilder(
+                                  future: getAlbum(),
+                                  builder: (context,snapshot){
+                                    if(snapshot.connectionState == ConnectionState.none && snapshot.hasData == null){
+                                      return Container(
+                                        child: Text('No Data'),
+                                      );
+                                    }
+                                    else if(snapshot.connectionState == ConnectionState.waiting){
+                                      return Container(
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              color: Color.fromRGBO(248, 135, 88, 1),
+                                            ),
+                                          )
+                                      );
+                                    }else{
+                                      return ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: album == null ? 0: album!.length,
+                                          itemBuilder: (BuildContext context, int index){
+                                              return Container(
+                                                // child: SingleChildScrollView(
+                                                //   scrollDirection: Axis.vertical,
+                                                  child: Column(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            print(album![index]['artist_name']);
+                                                          });
+                                                        },
+                                                        child: ClipRRect(
+                                                            borderRadius: BorderRadius.circular(5),
+                                                            child: Image.asset(
+                                                              '${album![index]['album_image']}',
+                                                              height: 100,
+                                                              width: 100,
+                                                              fit: BoxFit.fill,
+                                                            )
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                // ),
+                                              );
+                                          }
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 20,left: 5),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text('Entertainment',
+                              child: Text('Artist you might like',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -273,7 +305,35 @@ class _MusicState extends State<Music> {
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 10),
-                            height: 150,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  ClipOval(
+                                    child: SizedBox.fromSize(
+                                      size: Size.fromRadius(70), // Image radius
+                                      child: Image.asset('assets/images/telahun.jpg', fit: BoxFit.cover),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20,left: 5),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('New Release for you',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            height: 153,
                             child: FutureBuilder(
                               future: getPodcast(),
                               builder: (context,snapshot){
@@ -294,52 +354,51 @@ class _MusicState extends State<Music> {
                                   return ListView.builder(
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: jsonData == null ? 0: jsonData!.length,
+                                      itemCount: music == null ? 0: music!.length,
                                       itemBuilder: (BuildContext context, int index){
-                                        if((jsonData![index]['category']).contains('Entertainment')){
-                                          return Container(
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Column(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        print(jsonData![index]['podcast_title']);
-                                                      });
-                                                    },
-                                                    child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(5),
-                                                        child: Image.asset(
-                                                          '${jsonData![index]['image']}',
-                                                          height: 100,
-                                                          width: 100,
-                                                          fit: BoxFit.fill,
-                                                        )
-                                                    ),
+                                        return Container(
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Column(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    // setState(() {
+                                                    //   // print((json.decode(jsonData![index])).runtimeType);
+                                                    //   Navigator.of(context).push(MaterialPageRoute(
+                                                    //     builder: (context) => infoPage(id: jsonData![index]['_id'].toString(),name: jsonData![index]['podcast_title'].toString()),
+                                                    //   ));
+                                                    // });
+                                                  },
+                                                  child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(5),
+                                                      child: Image.asset(
+                                                        '${music![index]['image']}',
+                                                        height: 100,
+                                                        width: 100,
+                                                        fit: BoxFit.fill,
+                                                      )
                                                   ),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    jsonData![index]['podcast_title'],
-                                                    style: TextStyle(
-                                                        fontSize: 15
-                                                    ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  music![index]['title'],
+                                                  style: TextStyle(
+                                                      fontSize: 15
                                                   ),
-                                                  SizedBox(height: 5),
-                                                  Text(
-                                                    jsonData![index]['artist_name'],
-                                                    style: TextStyle(
-                                                        color: Colors.grey
-                                                    ),
+                                                ),
+                                                SizedBox(height: 5),
+                                                Text(
+                                                  music![index]['artist_name'],
+                                                  style: TextStyle(
+                                                      color: Colors.grey
                                                   ),
-                                                  SizedBox(width: 110)
-                                                ],
-                                              ),
+                                                ),
+                                                SizedBox(width: 110)
+                                              ],
                                             ),
-                                          );
-                                        }else{
-                                          return Container();
-                                        }
+                                          ),
+                                        );
                                       }
                                   );
                                 }

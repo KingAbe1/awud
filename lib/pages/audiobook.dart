@@ -141,7 +141,7 @@ class _AudiobookState extends State<Audiobook> {
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 10),
-                            height: 195,
+                            height: 200,
                             child: FutureBuilder(
                               future: getPodcast(),
                               builder: (context, snapshot) {
@@ -243,7 +243,7 @@ class _AudiobookState extends State<Audiobook> {
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 10),
-                            height: 195,
+                            height: 200,
                             child: FutureBuilder(
                               future: getPodcast(),
                               builder: (context, snapshot) {
@@ -350,7 +350,7 @@ class _AudiobookState extends State<Audiobook> {
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 10),
-                            height: 195,
+                            height: 200,
                             child: FutureBuilder(
                               future: getPodcast(),
                               builder: (context, snapshot) {
