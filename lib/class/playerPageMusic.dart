@@ -1,13 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:awud_app/model/musicModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
 import 'audio_file.dart';
+import 'downloadPage.dart';
 
 class playerPage extends StatefulWidget {
   final String id;
@@ -23,11 +25,13 @@ class _playerPageState extends State<playerPage> {
   late AudioPlayer advancedPlayer;
   List? result;
   var episode;
+  String? path;
 
   var fetchedMusic;
 
   Future printValue() async {
     var response = await Dio().get('http://192.168.1.7:5000/music/${widget.id}');
+    path = 'http://192.168.1.7:5000/music/${widget.id}';
 
     if (response.statusCode == 200) {
       print(widget.id);
@@ -42,10 +46,6 @@ class _playerPageState extends State<playerPage> {
   void initState(){
     super.initState();
     advancedPlayer = AudioPlayer();
-  }
-
-  downloadFile() async{
-
   }
 
   @override
@@ -104,7 +104,10 @@ class _playerPageState extends State<playerPage> {
                                       SizedBox(width: 60),
                                       GestureDetector(
                                         onTap: (){
-                                          downloadFile();
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => DownloadingDialog(path:"${path}/${fetchedMusic.title}",file_name:fetchedMusic.title),
+                                          );
                                         },
                                           child: Icon(FeatherIcons.download,color: Colors.white,)
                                       ),

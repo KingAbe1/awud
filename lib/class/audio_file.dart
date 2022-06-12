@@ -385,7 +385,7 @@ class PageManager {
   }
 
   void _init(String pt) async {
-    print("PATH: ${pt}");
+    // print("PATH: ${pt}");
     _audioPlayer = AudioPlayer();
     _setInitialPlaylist(pt);
     _listenForChangesInPlayerState();
