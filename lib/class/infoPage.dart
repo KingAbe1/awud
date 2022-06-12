@@ -26,7 +26,7 @@ class _infoPageState extends State<infoPage> {
   // String value = '';
   Future printValue() async{
     // print(widget.id);
-    var response = await http.get(Uri.parse('http://192.168.43.128:5000/podcast/${widget.id}'));
+    var response = await http.get(Uri.parse('http://192.168.1.7:5000/podcast/${widget.id}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);
@@ -36,7 +36,7 @@ class _infoPageState extends State<infoPage> {
   }
 
   printEpisode(x) async{
-    var response = await http.get(Uri.parse('http://192.168.43.128:5000/episode/${widget.id}/epsiode/'));
+    var response = await http.get(Uri.parse('http://192.168.1.7:5000/episode/${widget.id}/epsiode/'));
 
     if(response.statusCode == 200){
       episodes = json.decode(response.body);

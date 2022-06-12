@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class BooksApi {
   var data = [];
   List<FetchedPodcast> results = [];
-  String urlList = 'http://192.168.43.128:5000/podcast';
+  String urlList = 'http://192.168.1.7:5000/podcast';
 
   Future<List<FetchedPodcast>> getuserList({String? query}) async {
     var url = Uri.parse(urlList);

@@ -22,7 +22,7 @@ class _PodcastState extends State<Podcast> {
   List? episodes;
   // String value = '';
   Future getPodcast() async{
-    var response = await http.get(Uri.parse('http://192.168.43.128:5000/podcast'));
+    var response = await http.get(Uri.parse('http://192.168.1.7:5000/podcast'));
 
     if(response.statusCode == 200){
       jsonData = json.decode(response.body);

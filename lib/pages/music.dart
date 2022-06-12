@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'package:awud_app/class/infoPageMusic.dart';
+import 'package:awud_app/class/playerPageMusic.dart';
+import 'package:awud_app/model/skeleton.dart';
+import 'package:awud_app/pages/searchMusic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:shimmer/shimmer.dart';
 import 'notifications.dart';
 import 'settings.dart';
 import 'package:http/http.dart' as http;
@@ -19,7 +23,7 @@ class _MusicState extends State<Music> {
   List? album;
 
   Future getPodcast() async{
-    var response = await http.get(Uri.parse('http://192.168.43.128:5000/music'));
+    var response = await http.get(Uri.parse('http://192.168.1.7:5000/music'));
 
     if(response.statusCode == 200){
       music = json.decode(response.body);
@@ -28,7 +32,7 @@ class _MusicState extends State<Music> {
   }
 
   Future getAlbum() async{
-    var response = await http.get(Uri.parse('http://192.168.43.128:5000/album'));
+    var response = await http.get(Uri.parse('http://192.168.1.7:5000/album'));
 
     if(response.statusCode == 200){
       album = json.decode(response.body);
@@ -81,7 +85,10 @@ class _MusicState extends State<Music> {
                                     padding: EdgeInsets.only(right: 20),
                                     child: GestureDetector(
                                       onTap: (){
-
+                                        showSearch(
+                                            context: context,
+                                            delegate: MySearchDelegate()
+                                        );
                                       },
                                       child: Icon(
                                         FeatherIcons.search,
@@ -156,11 +163,53 @@ class _MusicState extends State<Music> {
                                 }
                                 else if(snapshot.connectionState == ConnectionState.waiting){
                                   return Container(
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: Color.fromRGBO(248, 135, 88, 1),
-                                        ),
-                                      )
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                           children: [
+                                             Column(
+                                               children: [
+                                                 Skelton(
+                                                   height: 100,
+                                                   width: 100,
+                                                 ),
+                                                 SizedBox(width: 110),
+                                                 SizedBox(height: 10),
+                                                 Skelton(width: 90),
+                                                 SizedBox(height: 10),
+                                                 Skelton(width: 90),
+                                               ],
+                                             ),
+                                             Column(
+                                               children: [
+                                                 Skelton(
+                                                   height: 100,
+                                                   width: 100,
+                                                 ),
+                                                 SizedBox(width: 110),
+                                                 SizedBox(height: 10),
+                                                 Skelton(width: 90),
+                                                 SizedBox(height: 10),
+                                                 Skelton(width: 90),
+                                               ],
+                                             ),
+                                             Column(
+                                               children: [
+                                                 Skelton(
+                                                   height: 100,
+                                                   width: 100,
+                                                 ),
+                                                 SizedBox(width: 110),
+                                                 SizedBox(height: 10),
+                                                 Skelton(width: 90),
+                                                 SizedBox(height: 10),
+                                                 Skelton(width: 90),
+                                               ],
+                                             )
+                                           ],
+                                          )
+                                        ],
+                                      ),
                                   );
                                 }else{
                                   return ListView.builder(
@@ -177,7 +226,7 @@ class _MusicState extends State<Music> {
                                                   onTap: (){
                                                     setState(() {
                                                       Navigator.of(context).push(MaterialPageRoute(
-                                                        builder: (context) => infoPage(id: music![index]['_id'].toString(),name: music![index]['title'].toString()),
+                                                        builder: (context) => playerPage(id: music![index]['_id'].toString(),name: music![index]['title'].toString()),
                                                       ));
                                                     });
                                                   },
@@ -246,11 +295,22 @@ class _MusicState extends State<Music> {
                                     }
                                     else if(snapshot.connectionState == ConnectionState.waiting){
                                       return Container(
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              color: Color.fromRGBO(248, 135, 88, 1),
-                                            ),
-                                          )
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Column(
+                                                    children: [
+                                                      Skelton(
+                                                        height: 100,
+                                                        width: 100,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
                                       );
                                     }else{
                                       return ListView.builder(
@@ -344,11 +404,53 @@ class _MusicState extends State<Music> {
                                 }
                                 else if(snapshot.connectionState == ConnectionState.waiting){
                                   return Container(
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: Color.fromRGBO(248, 135, 88, 1),
-                                        ),
-                                      )
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Skelton(
+                                                    height: 100,
+                                                    width: 100,
+                                                  ),
+                                                  SizedBox(width: 110),
+                                                  SizedBox(height: 10),
+                                                  Skelton(width: 90),
+                                                  SizedBox(height: 10),
+                                                  Skelton(width: 90),
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  Skelton(
+                                                    height: 100,
+                                                    width: 100,
+                                                  ),
+                                                  SizedBox(width: 110),
+                                                  SizedBox(height: 10),
+                                                  Skelton(width: 90),
+                                                  SizedBox(height: 10),
+                                                  Skelton(width: 90),
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  Skelton(
+                                                    height: 100,
+                                                    width: 100,
+                                                  ),
+                                                  SizedBox(width: 110),
+                                                  SizedBox(height: 10),
+                                                  Skelton(width: 90),
+                                                  SizedBox(height: 10),
+                                                  Skelton(width: 90),
+                                                ],
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                   );
                                 }else{
                                   return ListView.builder(

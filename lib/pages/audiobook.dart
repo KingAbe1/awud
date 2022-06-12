@@ -23,7 +23,7 @@ class _AudiobookState extends State<Audiobook> {
   // String value = '';
   Future getPodcast() async {
     var response = await http.get(
-        Uri.parse('http://192.168.43.128:5000/audioBook'));
+        Uri.parse('http://192.168.1.7:5000/audioBook'));
 
     if (response.statusCode == 200) {
       jsonData = json.decode(response.body);
