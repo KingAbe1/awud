@@ -324,10 +324,10 @@ class ShuffleButton extends StatelessWidget {
 
 class PlayButtonNotifier extends ValueNotifier<ButtonState> {
   PlayButtonNotifier() : super(_initialValue);
-  static const _initialValue = ButtonState.paused;
+  static const _initialValue = ButtonState.playing;
 }
 
-enum ButtonState { paused, playing, loading, }
+enum ButtonState { playing, paused, loading}
 
 
 class ProgressNotifier extends ValueNotifier<ProgressBarState> {
@@ -460,7 +460,6 @@ class PageManager {
   }
 
   void play() async {
-    // print('here');
     _audioPlayer.play();
   }
 
@@ -502,7 +501,6 @@ class PageManager {
 
   void onPreviousSongButtonPressed() {
     _audioPlayer.seekToPrevious();
-    //print('fgsjkdjglkdffjdghbjkdfbgdfhvbhjkjsldvbksslbnkshrggcvn');
     // _audioPlayer.hasPrevious ? _audioPlayer.seekToPrevious : print('no previous');
   }
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:awud_app/model/musicModel.dart';
+import 'package:awud_app/pages/lyrics.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -34,11 +35,7 @@ class _playerPageState extends State<playerPage> {
     path = 'http://192.168.1.7:5000/music/${widget.id}';
 
     if (response.statusCode == 200) {
-      print(widget.id);
-      // result = response.data;
       fetchedMusic = FetchedMusic.fromJson(response.data);
-
-      // print(fetchedMusic.image);
     }
   }
 
@@ -87,12 +84,55 @@ class _playerPageState extends State<playerPage> {
                             child: Column(
                               children: [
                                 SizedBox(height: 100),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: Image.asset("${fetchedMusic.image}",
-                                    height: 200,
-                                    width: 200,
-                                    fit: BoxFit.fill,
+                                GestureDetector(
+                                  onTap: (){
+                                    setState(() {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => lyricsPage(lyrics:""),
+                                      ));
+                                    });
+                                  },
+                                  child: Stack(
+                                    alignment: Alignment.bottomRight,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.asset("${fetchedMusic.image}",
+                                          height: 250,
+                                          width: 250,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: (){
+                                          setState(() {
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (context) => lyricsPage(lyrics:""),
+                                            ));
+                                          });
+                                        },
+                                        child: Container(
+                                          margin: EdgeInsets.all(10),
+                                          width: 70,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                              color: Color.fromRGBO(248, 135, 88, 1)
+                                          ),
+                                          // color: Color.fromRGBO(248, 135, 88, 1),
+                                          child: Center(
+                                            child: Text(
+                                              'Lyrics',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ),
                                 // SizedBox(height: 80),
