@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:awud_app/model/musicModel.dart';
 import 'package:http/http.dart' as http;
 
+import '../main.dart';
+
 class BooksApi {
   var data = [];
   List<FetchedMusic> results = [];
-  String urlList = 'http://192.168.1.7:5000/music';
+  String urlList = 'http://${IpAddresse}:5000/music';
 
   Future<List<FetchedMusic>> getuserList({String? query}) async {
     var url = Uri.parse(urlList);

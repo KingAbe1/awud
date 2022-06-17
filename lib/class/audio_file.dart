@@ -31,7 +31,9 @@ late AudioPlayer _audioPlayer;
 
 class MyAp extends StatefulWidget {
   final String path;
-  const MyAp({Key? key, required this.path}) : super(key: key);
+  final List? playlist;
+
+  const MyAp({Key? key, required this.path, required this.playlist}) : super(key: key);
 
   @override
   _MyApState createState() => _MyApState();
@@ -44,8 +46,7 @@ class _MyApState extends State<MyAp> {
   @override
   void initState() {
     super.initState();
-    _pageManager = PageManager(widget.path);
-    // print(widget.path);
+    _pageManager = PageManager(widget.playlist);
   }
 
   @override
@@ -277,13 +278,13 @@ class PlayButton extends StatelessWidget {
   }
 }
 
-
 // Widget _nextButton() {
 //   return IconButton(
 //     icon: Icon(Icons.skip_next),
 //     onPressed: _audioPlayer.hasNext ? _audioPlayer.seekToNext : null,
 //   );
 // }
+
 class NextSongButton extends StatelessWidget {
   const NextSongButton({Key? key}) : super(key: key);
   @override
@@ -299,8 +300,6 @@ class NextSongButton extends StatelessWidget {
     );
   }
 }
-
-
 
 class ShuffleButton extends StatelessWidget {
   const ShuffleButton({Key? key}) : super(key: key);
@@ -319,8 +318,6 @@ class ShuffleButton extends StatelessWidget {
     );
   }
 }
-
-
 
 class PlayButtonNotifier extends ValueNotifier<ButtonState> {
   PlayButtonNotifier() : super(_initialValue);
@@ -380,12 +377,10 @@ class PageManager {
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
 
   PageManager(path) {
-    String p=path;
-    _init(p);
+    _init(path);
   }
 
-  void _init(String pt) async {
-    // print("PATH: ${pt}");
+  void _init(List pt) async {
     _audioPlayer = AudioPlayer();
     _setInitialPlaylist(pt);
     _listenForChangesInPlayerState();
@@ -396,12 +391,11 @@ class PageManager {
   }
 
   // TODO: set playlist
-  void _setInitialPlaylist(String url) async {
-    // print("URL: ${url}");
-    //const url = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3';
-    //await _audioPlayer.setUrl(url);
-    //const url = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3';
-    await _audioPlayer.setAsset(url);
+  void _setInitialPlaylist(List url) async {
+    String? url;
+    for(int i=0;i<url!.length;i++){
+      await _audioPlayer.setAsset(url[i]);
+    }
   }
 
   void _listenForChangesInPlayerState() {

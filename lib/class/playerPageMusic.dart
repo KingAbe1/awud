@@ -9,6 +9,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:just_audio/just_audio.dart';
 // import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
+import '../main.dart';
 import 'audio_file.dart';
 import 'downloadPage.dart';
 
@@ -31,7 +32,7 @@ class _playerPageState extends State<playerPage> {
   var fetchedMusic;
 
   Future printValue() async {
-    var response = await Dio().get('http://192.168.1.7:5000/music/${widget.id}');
+    var response = await Dio().get('http://${IpAddresse}:5000/music/${widget.id}');
     path = 'http://192.168.1.7:5000/music/${widget.id}';
 
     if (response.statusCode == 200) {
@@ -206,7 +207,7 @@ class _playerPageState extends State<playerPage> {
                                                       ),
                                                     ),
                                                     SizedBox(height:60),
-                                                    MyAp(path:"assets/audio/${fetchedMusic.path}")
+                                                    MyAp(path:"assets/audio/${fetchedMusic.path}",playlist: [])
                                                     // Player(path:"assets/audio}")
                                                   ],
                                                 ),

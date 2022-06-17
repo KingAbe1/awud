@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../main.dart';
 import 'playerPageAudioBook.dart';
 import 'package:awud_app/pages/search.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class infoPagePodcast extends StatefulWidget {
-  // final String value;
   final String id;
   final String name;
 
@@ -19,30 +19,30 @@ class infoPagePodcast extends StatefulWidget {
 
 
 class infoPagePodcastState extends State<infoPagePodcast> {
-
+  List? playlist = [];
   List? result;
   List? episodes;
-  // String value = '';
+  var num = 0;
+
   Future printValue() async{
-    // print(widget.id);
-    var response = await http.get(Uri.parse('http://192.168.1.7:5000/audioBook/${widget.id}'));
+    var response = await http.get(Uri.parse('http://${IpAddresse}:5000/audioBook/${widget.id}'));
 
     if(response.statusCode == 200){
+
       result = json.decode(response.body);
-      // print(jsonData![0]);
+
+      if(num != 1){
+        for(int i=0;i<result![0]['Chapters'].length;i++){
+          playlist!.add("assets/audio/${result![0]['Chapters'][i]['chapter_audio']}");
+          num = 1;
+        }
+      }
+      // print(playlist);
+     // playlist=
       return result;
     }
   }
 
-  printEpisode(x) async{
-    var response = await http.get(Uri.parse('http://192.168.1.7:5000/chapters/${widget.id}/epsiode/'));
-
-    if(response.statusCode == 200){
-      episodes = json.decode(response.body);
-      // print(episodes);
-      return x;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +232,7 @@ class infoPagePodcastState extends State<infoPagePodcast> {
                                                                                         setState(() {
                                                                                           // print((json.decode(jsonData![index])).runtimeType);
                                                                                           Navigator.of(context).push(MaterialPageRoute(
-                                                                                            builder: (context) => playerPage(value: result![0]['_id'].toString(),epi: result![0]['Chapters'][x]['_id'].toString()),
+                                                                                            builder: (context) => playerPage(value: result![0]['_id'].toString(),epi: result![0]['Chapters'][x]['_id'].toString(),pl:playlist),
                                                                                           ));
                                                                                         });
                                                                                       },
@@ -243,6 +243,7 @@ class infoPagePodcastState extends State<infoPagePodcast> {
                                                                                               "${result![0]['image']}",
                                                                                               fit: BoxFit.fill,
                                                                                             ),
+                                                                                            // addToPlaylist(result![0]['Chapters'][x]['chapter_audio']),
                                                                                             FaIcon(
                                                                                               FontAwesomeIcons.play,
                                                                                               color: Colors.white,
@@ -290,7 +291,7 @@ class infoPagePodcastState extends State<infoPagePodcast> {
                                                                                           SizedBox(width: 35),
                                                                                           Icon(FeatherIcons.download,color: Color.fromRGBO(248, 135, 88, 1),)
                                                                                         ],
-                                                                                      )
+                                                                                      ),
                                                                                     ],
                                                                                   ),
                                                                                 )

@@ -6,6 +6,7 @@ import 'package:awud_app/pages/searchMusic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:shimmer/shimmer.dart';
+import '../main.dart';
 import 'notifications.dart';
 import 'settings.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +24,7 @@ class _MusicState extends State<Music> {
   List? album;
 
   Future getPodcast() async{
-    var response = await http.get(Uri.parse('http://192.168.1.7:5000/music'));
+    var response = await http.get(Uri.parse('http://192.168.43.127:5000/music'));
 
     if(response.statusCode == 200){
       music = json.decode(response.body);
@@ -32,7 +33,7 @@ class _MusicState extends State<Music> {
   }
 
   Future getAlbum() async{
-    var response = await http.get(Uri.parse('http://192.168.1.7:5000/album'));
+    var response = await http.get(Uri.parse('http://${IpAddresse}:5000/album'));
 
     if(response.statusCode == 200){
       album = json.decode(response.body);

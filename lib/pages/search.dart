@@ -36,12 +36,10 @@ class MySearchDelegate extends SearchDelegate{
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             // print('No Data');
-            return Container(
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: Color.fromRGBO(248, 135, 88, 1),
-                  ),
-                )
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Color.fromRGBO(248, 135, 88, 1),
+              ),
             );
           }
           List<FetchedPodcast>? data = snapshot.data;

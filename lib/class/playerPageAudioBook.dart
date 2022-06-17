@@ -7,14 +7,15 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
-
+import '../main.dart';
 import 'audio_file.dart';
 
 class playerPage extends StatefulWidget {
   final String value;
   final String epi;
+  final List? pl;
 
-  playerPage({Key? key, required this.value, required this.epi}) : super(key: key);
+  playerPage({Key? key, required this.value, required this.epi, required this.pl}) : super(key: key);
 
   @override
   _playerPageState createState() => _playerPageState();
@@ -26,7 +27,7 @@ class _playerPageState extends State<playerPage> {
   var episode;
 
   Future printValue() async{
-    var response = await http.get(Uri.parse('http://192.168.1.7:5000/audioBook/${widget.value}'));
+    var response = await http.get(Uri.parse('http://${IpAddresse}:5000/audioBook/${widget.value}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);
@@ -35,7 +36,7 @@ class _playerPageState extends State<playerPage> {
   }
 
   Future printEpisode() async{
-    var response = await Dio().get('http://192.168.1.7:5000/chapter/${widget.value}/chapter/${widget.epi}');
+    var response = await Dio().get('http://${IpAddresse}:5000/chapter/${widget.value}/chapter/${widget.epi}');
 
     if(response.statusCode == 200){
       episode = response.data;
@@ -161,7 +162,7 @@ class _playerPageState extends State<playerPage> {
                                                       ),
                                                     ),
                                                     SizedBox(height:60),
-                                                    MyAp(path:"assets/audio/${episode['chapter_audio']}")
+                                                    MyAp(path:"assets/audio/${episode['chapter_audio']}",playlist:widget.pl)
                                                     // Player(path:"assets/audio}")
                                                   ],
                                                 ),

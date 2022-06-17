@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:http/http.dart' as http;
 
+import '../main.dart';
+
 class infoPage extends StatefulWidget {
   final String id;
   final String name;
@@ -23,7 +25,7 @@ class _infoPageState extends State<infoPage> {
   var fetchedMusic;
 
   Future printValue() async {
-    var response = await Dio().get('http://192.168.1.7:5000/music/${widget.id}');
+    var response = await Dio().get('http://${IpAddresse}:5000/music/${widget.id}');
 
     if (response.statusCode == 200) {
       fetchedMusic = FetchedMusic.fromJson(response.data);

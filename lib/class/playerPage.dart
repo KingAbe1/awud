@@ -8,6 +8,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
 
+import '../main.dart';
 import 'audio_file.dart';
 
 class playerPage extends StatefulWidget {
@@ -26,7 +27,7 @@ class _playerPageState extends State<playerPage> {
   var episode;
 
   Future printValue() async{
-    var response = await http.get(Uri.parse('http://192.168.1.7:5000/podcast/${widget.value}'));
+    var response = await http.get(Uri.parse('http://${IpAddresse}:5000/podcast/${widget.value}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);
@@ -35,7 +36,7 @@ class _playerPageState extends State<playerPage> {
   }
 
   Future printEpisode() async{
-    var response = await Dio().get('http://192.168.1.7:5000/episode/${widget.value}/epsiode/${widget.epi}');
+    var response = await Dio().get('http://${IpAddresse}:5000/episode/${widget.value}/epsiode/${widget.epi}');
 
     if(response.statusCode == 200){
       episode = response.data;
@@ -161,7 +162,7 @@ class _playerPageState extends State<playerPage> {
                                                       ),
                                                     ),
                                                     SizedBox(height:60),
-                                                    MyAp(path:"assets/audio/${episode['episode_audio']}")
+                                                    MyAp(path:"assets/audio/${episode['episode_audio']}",playlist: [],)
                                                     // Player(path:"assets/audio}")
                                                   ],
                                                 ),

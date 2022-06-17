@@ -1,5 +1,6 @@
 import 'package:awud_app/class/infoPageAudiobook.dart';
 import 'package:flutter/material.dart';
+import '../main.dart';
 import 'settings.dart';
 import 'notifications.dart';
 import 'searchAudiobook.dart';
@@ -23,7 +24,7 @@ class _AudiobookState extends State<Audiobook> {
   // String value = '';
   Future getPodcast() async {
     var response = await http.get(
-        Uri.parse('http://192.168.1.7:5000/audioBook'));
+        Uri.parse('http://${IpAddresse}:5000/audioBook'));
 
     if (response.statusCode == 200) {
       jsonData = json.decode(response.body);

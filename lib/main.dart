@@ -1,6 +1,5 @@
 import 'dart:ui';
-import 'package:awud_app/localization/demo_localization.dart';
-import 'package:awud_app/localization/language_constants.dart';
+import 'package:awud_app/pages/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -8,29 +7,32 @@ import "package:awud_app/pages/music.dart";
 import "package:awud_app/pages/podcast.dart";
 import "package:awud_app/pages/audiobook.dart";
 import "package:awud_app/pages/library.dart";
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:provider/provider.dart';
 
+
+var IpAddresse = "192.168.43.127";
 
 void main() async{
-  runApp(navBar());
+  num verify = 0;
+  if(verify == 0){
+    runApp(login());
+  }else{
+    runApp(navBar());
+  }
 }
 
 class navBar extends StatefulWidget {
   const navBar({Key? key}) : super(key: key);
-  // static void setLocale(BuildContext context, Locale newLocale) {
-  //   _navBarState? state = context.findAncestorStateOfType<_navBarState>();
-  //   state!.setLocale(newLocale);
-  // }
   @override
   _navBarState createState() => _navBarState();
 }
 
 class _navBarState extends State<navBar> {
   int _index = 0;
+  int verifyer = 0;
 
   final screens = [
+    // const login(),
     const Music(),
     const Podcast(),
     const Audiobook(),
@@ -99,7 +101,7 @@ class _navBarState extends State<navBar> {
 
           home: Scaffold(
             body: PageView.builder(
-                itemCount: 4,
+                itemCount: 5,
                 controller: controller,
                 onPageChanged: (page){
                   setState(() {

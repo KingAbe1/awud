@@ -5,6 +5,7 @@ import 'package:awud_app/class/infoPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import '../main.dart';
 import 'settings.dart';
 import 'notifications.dart';
 import 'search.dart';
@@ -22,7 +23,7 @@ class _PodcastState extends State<Podcast> {
   List? episodes;
   // String value = '';
   Future getPodcast() async{
-    var response = await http.get(Uri.parse('http://192.168.1.7:5000/podcast'));
+    var response = await http.get(Uri.parse('http://${IpAddresse}:5000/podcast'));
 
     if(response.statusCode == 200){
       jsonData = json.decode(response.body);
