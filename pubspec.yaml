@@ -52,9 +52,12 @@ dependencies:
   share: ^2.0.4
   flutter_localizations:
     sdk: flutter
+  intl: ^0.17.0
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0
   path_provider: ^2.0.10
+#  google_sign_in: ^5.3.1
+#  flutter_stripe: ^2.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -72,7 +75,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -82,7 +85,7 @@ flutter:
   assets:
     - assets/images/
     - assets/audio/
-    - lib/lang/
+    - lib/l10n/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

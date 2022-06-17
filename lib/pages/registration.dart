@@ -27,6 +27,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+
   bool _rememberMe = false;
 
   Widget _buildEmailTF() {
@@ -42,20 +44,30 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: TextField(
-            keyboardType: TextInputType.phone,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.phone,
+          child: Form(
+            key: formKey,
+            child: TextFormField(
+              keyboardType: TextInputType.phone,
+              style: TextStyle(
                 color: Colors.white,
               ),
-              hintText: 'Enter your Phone Number',
-              hintStyle: kHintTextStyle,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(top: 14.0),
+                prefixIcon: Icon(
+                  Icons.phone,
+                  color: Colors.white,
+                ),
+                hintText: 'Enter your Phone Number',
+                hintStyle: kHintTextStyle,
+              ),
+              validator: (value){
+                if(value!.isEmpty || !RegExp(r'^[0][9][0-9]{8}$').hasMatch(value)){
+                  return "Enter Correct Phone Number";
+                }else{
+                  return null;
+                }
+              },
             ),
           ),
         ),
@@ -308,10 +320,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(height: 30.0),
-                      _buildEmailTF(),
+                      // _buildEmailTF(),
                       SizedBox(
                         height: 30.0,
                       ),
+                      _buildEmailTF(),
                       _buildPasswordTF(),
                       _buildForgotPasswordBtn(),
                       _buildRememberMeCheckbox(),
@@ -319,6 +332,43 @@ class _LoginScreenState extends State<LoginScreen> {
                       _buildSignInWithText(),
                       _buildSocialBtnRow(),
                       _buildSignupBtn(),
+                      // Form(
+                      //   key: formKey,
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text(
+                      //         'Phone Number',
+                      //         style: kLabelStyle,
+                      //       ),
+                      //       SizedBox(height: 10.0),
+                      //       TextFormField(
+                      //         keyboardType: TextInputType.phone,
+                      //         style: TextStyle(
+                      //           color: Colors.white,
+                      //         ),
+                      //         decoration: InputDecoration(
+                      //           border: InputBorder.none,
+                      //           contentPadding: EdgeInsets.only(top: 14.0),
+                      //           prefixIcon: Icon(
+                      //             Icons.phone,
+                      //             color: Colors.white,
+                      //           ),
+                      //           hintText: 'Enter your Phone Number',
+                      //           hintStyle: kHintTextStyle,
+                      //         ),
+                      //         validator: (value){
+                      //           if(value!.isEmpty || !RegExp(r'^[0][9][0-9]{8}$').hasMatch(value)){
+                      //             return "Enter Correct Phone Number";
+                      //           }else{
+                      //             return null;
+                      //           }
+                      //         },
+                      //       ),
+                      //
+                      //     ],
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
