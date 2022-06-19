@@ -1,6 +1,12 @@
+import 'dart:convert';
+
+import 'package:awud_app/pages/login.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class VerifyPhone extends StatefulWidget {
+  final String phone;
+  const VerifyPhone({Key? key, required this.phone}) : super(key: key);
 
   @override
   _VerifyPhoneState createState() => _VerifyPhoneState();
@@ -51,7 +57,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 14),
                         child: Text(
-                          "Code is sent to +251947431170",
+                          "Code is sent to ${widget.phone}",
                           style: TextStyle(
                             fontSize: 22,
                             color: Color.fromRGBO(248, 135, 88, 1),
@@ -94,7 +100,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
 
                             GestureDetector(
                               onTap: () {
-                                print("Resend the code to the user");
+                                sendOTP(widget.phone);
                               },
                               child: Text(
                                 "Request again",
@@ -129,7 +135,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            print("Verify and Create Account");
+                            // sendOTP(widget.phone);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -213,6 +219,27 @@ class _VerifyPhoneState extends State<VerifyPhone> {
         ),
       ),
     );
+  }
+
+  void sendOTP(String phone) async{
+    try{
+      Response response = await post(Uri.parse('http://192.168.43.196:5000/phonenumber/'),
+          body: {
+            "phone": phone
+          }
+      );
+      if(response.statusCode == 200){
+        print('Success');
+        var data = jsonDecode(response.body.toString());
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => login()));
+      }else {
+        // Container(
+        //   margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 50),
+        // );
+      }
+    }catch(e){
+      print(e.toString());
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:awud_app/pages/login.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -50,27 +51,61 @@ class _LoginScreenState extends State<LoginScreen> {
       return double.tryParse(s) != null;
     }
 
-    void register(String email , password, username) async {
+    void register(String email ,String password,String username) async {
       try{
-        Response response = await post(Uri.parse('https://reqres.in/api/register'),
+        Response response = await post(Uri.parse('http://192.168.43.196:5000/user/signup/'),
             body: {
-              'username': '',
+              'name': username,
               'email' : email,
               'password' : password
             }
         );
         if(response.statusCode == 200){
+          print('Success');
           var data = jsonDecode(response.body.toString());
           if(isNumeric(email)){
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhone()));
+            print(email);
+            print(email.runtimeType);
+            try{
+              Response response = await post(Uri.parse('http://192.168.43.196:5000/phonenumber/'),
+                  body: {
+                    "phone": email
+                  }
+              );
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhone(phone:email.toString())));
+            }catch(e){
+              print(e.toString());
+              final snackBar = SnackBar(
+                content: const Text('Error sending user code'),
+                action: SnackBarAction(
+                  label: 'Error',
+                  onPressed: () {
+                    // Some code to undo the change.
+                  },
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
           }else{
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhone()));
+            // Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhone()));
           }
         }else {
-          print('Registration Failed');
+          Container(
+            margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 50),
+          );
         }
       }catch(e){
         print(e.toString());
+        final snackBar = SnackBar(
+          content: const Text('Error registering user'),
+          action: SnackBarAction(
+            label: 'Error',
+            onPressed: () {
+              // Some code to undo the change.
+            },
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
     return Scaffold(
@@ -190,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     validator: (value) {
                                       if(value!.isNotEmpty){
                                         if(isNumeric(value)){
-                                          if(!RegExp(r'^[+][0-9]{12,13}$').hasMatch(value)){
+                                          if(!RegExp(r'^[0-9]{12,13}$').hasMatch(value)){
                                             return "Enter correct phone number";
                                           }
                                         }else{
@@ -237,9 +272,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     validator: (value) {
                                       if(value!.isNotEmpty){
-                                        // if(!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(value)){
-                                        //   return "Password should contain one uppercase, one lowercase, at least one digit, at least one character and password length must be greater than 8";
-                                        // }
+                                        if(!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(value)){
+                                          return "Password should contain one uppercase, one lowercase, at least one digit, at least one character and password length must be greater than 8";
+                                        }
                                       }else{
                                         return "Password field can't be empty";
                                       }

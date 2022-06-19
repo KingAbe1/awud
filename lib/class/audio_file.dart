@@ -46,6 +46,7 @@ PageManager? _pageManager;
 class _MyApState extends State<MyAp> {
   @override
   void initState() {
+    print(widget.playlist);
     super.initState();
     _pageManager = PageManager(widget.path);
   }
@@ -63,6 +64,7 @@ class _MyApState extends State<MyAp> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
+
             //  CurrentSongTitle(),
             //  Playlist(),
              // AddRemoveSongButtons(),
