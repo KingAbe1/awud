@@ -43,7 +43,7 @@ class _PodcastState extends State<Podcast> {
     return MaterialApp(
         routes: {
           '/notification': (context) => Notifications(),
-          '/setting': (context) => Setting()
+          '/setting': (context) => HomeScreen()
         },
         home: Scaffold(
           body: SafeArea(

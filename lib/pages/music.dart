@@ -51,7 +51,7 @@ class _MusicState extends State<Music> {
       return MaterialApp(
           routes: {
             '/notification': (context) => Notifications(),
-            '/setting': (context) => Setting()
+            '/setting': (context) => HomeScreen()
           },
           theme: ThemeData(
             primarySwatch: Colors.blue,

@@ -43,7 +43,7 @@ class _AudiobookState extends State<Audiobook> {
     return MaterialApp(
         routes: {
           '/notification': (context) => Notifications(),
-          '/setting': (context) => Setting()
+          '/setting': (context) => HomeScreen()
         },
         home: Scaffold(
           body: SafeArea(

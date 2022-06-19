@@ -13,7 +13,7 @@ class Favuorite extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/notification': (context) => Notifications(),
-        '/setting': (context) => Setting(),
+        '/setting': (context) => HomeScreen(),
       },
       home: DefaultTabController(
         length: 4,

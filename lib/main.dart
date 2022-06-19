@@ -7,14 +7,16 @@ import "package:awud_app/pages/music.dart";
 import "package:awud_app/pages/podcast.dart";
 import "package:awud_app/pages/audiobook.dart";
 import "package:awud_app/pages/library.dart";
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 var IpAddresse = "192.168.43.128";
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // Stripe.publishableKey =
-  // 'pk_test_51L3gIJC995YiUADqJi1CmMaHawXkIApGcm953pfUVgnt5sDAPwUsunC2cGBbN052yRDvIprd0XMYVVfVf85vReaa00glO8LwgD';
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey =
+  'pk_test_51L3gIJC995YiUADqJi1CmMaHawXkIApGcm953pfUVgnt5sDAPwUsunC2cGBbN052yRDvIprd0XMYVVfVf85vReaa00glO8LwgD';
+
   // num verify = 1;
   // if(verify == 1){
   //   runApp(login());

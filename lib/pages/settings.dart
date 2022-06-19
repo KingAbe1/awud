@@ -1,95 +1,155 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_stripe/flutter_stripe.dart';
 
-class Setting extends StatelessWidget {
-  const Setting({Key? key}) : super(key: key);
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  Map<String, dynamic>? paymentIntentData;
+  @override
   Widget build(BuildContext context) {
-      return MaterialApp(
-          home: Scaffold(
-              body: SafeArea(
-                child: NestedScrollView(
-                  floatHeaderSlivers: true,
-                  headerSliverBuilder: (context, innerBoxIsScrolled) =>[
-                    SliverOverlapAbsorber(
-                      handle:
-                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                      sliver: SliverAppBar(
-                        elevation: 0,
-                        backgroundColor: Colors.transparent,
-                        title: Text(
-                          "Settings",
-                          style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                  body: SafeArea(
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 5,right: 5),
-                      child: ListView(
-                        children: [
-                          Container(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: AssetImage('assets/images/128-1280406_view-user-icon-png-user-circle-icon-png.png'),
-                                radius: 30,
-                              ),
-                              SizedBox(width: 10),
-                              Column(
-                                children: [
-                                  Text(
-                                    'abellegesse151',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    'Awud Free',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.grey
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 10,bottom: 10),
-                            color: Colors.black12,
-                            height: 1,
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Dark Mode',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Payment Page'),
+      ),
+      body: Container(
+        margin: EdgeInsets.all(50),
+        child: Column(
+          children: [
+            Center(
+              child: InkWell(
+                onTap: ()async{
+                  await makePayment();
+                },
+                child: Container(
+                  height: 50,
+                  width: 200,
+                  color: Colors.green,
+                  child: Center(
+                    child: Text('Pay with stripe' , style: TextStyle(color: Colors.white , fontSize: 20),),
                   ),
                 ),
-              )
-          )
-      );
+              ),
+            ),
+            SizedBox(height: 30),
+            Center(
+              child: InkWell(
+                onTap: ()async{
+                  await makePayment();
+                },
+                child: Container(
+                  height: 50,
+                  width: 200,
+                  color: Colors.green,
+                  child: Center(
+                    child: Text('Pay with yenepay' , style: TextStyle(color: Colors.white , fontSize: 20),),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
+    );
   }
+
+  Future<void> makePayment() async {
+    try {
+
+      paymentIntentData =
+      await createPaymentIntent('20', 'USD'); //json.decode(response.body);
+      // print('Response body==>${response.body.toString()}');
+      await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+              paymentIntentClientSecret: paymentIntentData!['client_secret'],
+              applePay: true,
+              googlePay: true,
+              testEnv: true,
+              style: ThemeMode.dark,
+              merchantCountryCode: 'US',
+              merchantDisplayName: 'ANNIE')).then((value){
+      });
+
+
+      ///now finally display payment sheeet
+
+      displayPaymentSheet();
+    } catch (e, s) {
+      print('exception:$e$s');
+    }
+  }
+
+  displayPaymentSheet() async {
+
+    try {
+      await Stripe.instance.presentPaymentSheet(
+          parameters: PresentPaymentSheetParameters(
+            clientSecret: paymentIntentData!['client_secret'],
+            confirmPayment: true,
+          )).then((newValue){
+
+
+        print('payment intent'+paymentIntentData!['id'].toString());
+        print('payment intent'+paymentIntentData!['client_secret'].toString());
+        print('payment intent'+paymentIntentData!['amount'].toString());
+        print('payment intent'+paymentIntentData.toString());
+        //orderPlaceApi(paymentIntentData!['id'].toString());
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("paid successfully")));
+
+        paymentIntentData = null;
+
+      }).onError((error, stackTrace){
+        print('Exception/DISPLAYPAYMENTSHEET==> $error $stackTrace');
+      });
+
+
+    } on StripeException catch (e) {
+      print('Exception/DISPLAYPAYMENTSHEET==> $e');
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            content: Text("Cancelled "),
+          ));
+    } catch (e) {
+      print('$e');
+    }
+  }
+
+  //  Future<Map<String, dynamic>>
+  createPaymentIntent(String amount, String currency) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': calculateAmount('20'),
+        'currency': currency,
+        'payment_method_types[]': 'card'
+      };
+      print(body);
+      var response = await http.post(
+          Uri.parse('https://api.stripe.com/v1/payment_intents'),
+          body: body,
+          headers: {
+            'Authorization':
+            'Bearer sk_test_51L3gIJC995YiUADq7CHbpqyFs9yzZjO2ufFURdD38E9r9GSUqdCJ8JbYsOL4inFHbfDmaH4Xblroa9wYJ6eFS9V700xkCadYj5',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          });
+      print('Create Intent reponse ===> ${response.body.toString()}');
+      return jsonDecode(response.body);
+    } catch (err) {
+      print('err charging user: ${err.toString()}');
+    }
+  }
+
+  calculateAmount(String amount) {
+    final a = (int.parse(amount)) * 100 ;
+    return a.toString();
+  }
+
 }
