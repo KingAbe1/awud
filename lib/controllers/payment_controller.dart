@@ -31,6 +31,7 @@
 //   }
 //
 //   displayPaymentSheet() async {
+//     print('here');
 //     try {
 //       await Stripe.instance.presentPaymentSheet();
 //       Get.snackbar('Payment', 'Payment Successful',
@@ -62,7 +63,7 @@
 //           Uri.parse('https://api.stripe.com/v1/payment_intents'),
 //           body: body,
 //           headers: {
-//             'Authorization': 'sk_test_51L3gIJC995YiUADq7CHbpqyFs9yzZjO2ufFURdD38E9r9GSUqdCJ8JbYsOL4inFHbfDmaH4Xblroa9wYJ6eFS9V700xkCadYj5',
+//             'Authorization': 'Bearer Your Stripe Secret Key',
 //             'Content-Type': 'application/x-www-form-urlencoded'
 //           });
 //       return jsonDecode(response.body);

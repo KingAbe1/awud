@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Payment Page'),
+        title: Text('Payment '),
       ),
       body: Container(
         margin: EdgeInsets.all(50),
@@ -90,25 +90,25 @@ class _HomeScreenState extends State<HomeScreen> {
   displayPaymentSheet() async {
 
     try {
-      await Stripe.instance.presentPaymentSheet(
-          parameters: PresentPaymentSheetParameters(
-            clientSecret: paymentIntentData!['client_secret'],
-            confirmPayment: true,
-          )).then((newValue){
-
-
-        print('payment intent'+paymentIntentData!['id'].toString());
-        print('payment intent'+paymentIntentData!['client_secret'].toString());
-        print('payment intent'+paymentIntentData!['amount'].toString());
-        print('payment intent'+paymentIntentData.toString());
-        //orderPlaceApi(paymentIntentData!['id'].toString());
+      await Stripe.instance.presentPaymentSheet();
+      //     parameters: PresentPaymentSheetParameters(
+      //       clientSecret: paymentIntentData!['client_secret'],
+      //       confirmPayment: true,
+      //     )).then((newValue){
+      //
+      //
+      //   print('payment intent'+paymentIntentData!['id'].toString());
+      //   print('payment intent'+paymentIntentData!['client_secret'].toString());
+      //   print('payment intent'+paymentIntentData!['amount'].toString());
+      //   print('payment intent'+paymentIntentData.toString());
+      //   //orderPlaceApi(paymentIntentData!['id'].toString());
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("paid successfully")));
-
-        paymentIntentData = null;
-
-      }).onError((error, stackTrace){
-        print('Exception/DISPLAYPAYMENTSHEET==> $error $stackTrace');
-      });
+      //
+      //   paymentIntentData = null;
+      //
+      // }).onError((error, stackTrace){
+      //   print('Exception/DISPLAYPAYMENTSHEET==> $error $stackTrace');
+      // });
 
 
     } on StripeException catch (e) {
