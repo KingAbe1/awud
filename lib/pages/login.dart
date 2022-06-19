@@ -68,14 +68,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future signIn() async{
-    // await GoogleSignInApi.login();
-  }
-
-
   Widget _buildSocialBtn(Function onTap, AssetImage logo){
     return GestureDetector(
-      onTap: () => signIn,
+      onTap: () => signIn(),
       child: Container(
         height: 40.0,
         width: 40.0,
@@ -139,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         'Sign In',
                         style: TextStyle(
                           color: Colors.white,
-                          fontFamily: 'OpenSans',
+                          // fontFamily: 'OpenSans',
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -306,7 +301,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     children: <Widget>[
                                       _buildSocialBtn(
                                             () => {
-                                              print('GGGGGGG')
+
                                             },
                                         AssetImage(
                                           'assets/images/Google-Icon-PNG-768x768.jpg',
@@ -319,7 +314,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   alignment: Alignment.center,
                                   child: GestureDetector(
                                     onTap: () => {
-                                      registration()
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => registration()))
                                     },
                                     child: RichText(
                                       text: TextSpan(
@@ -360,4 +355,16 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  Future signIn() async{
+    final user = await GoogleSignInApi.login();
+    // you can pass user information using user variable above to navbar
+
+    if(user == null){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign in  Failed')));
+    }else{
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => navBar()));
+    }
+  }
+
 }

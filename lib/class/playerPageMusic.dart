@@ -5,10 +5,12 @@ import 'package:awud_app/model/musicModel.dart';
 import 'package:awud_app/pages/lyrics.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:just_audio/just_audio.dart';
 // import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
+import 'package:sliding_sheet/sliding_sheet.dart';
 import '../main.dart';
 import 'audio_file.dart';
 import 'downloadPage.dart';
@@ -24,6 +26,7 @@ class playerPage extends StatefulWidget {
 }
 
 class _playerPageState extends State<playerPage> {
+  String textFile = 'Empty';
   late AudioPlayer advancedPlayer;
   List? result;
   var episode;
@@ -73,18 +76,9 @@ class _playerPageState extends State<playerPage> {
                       itemCount: fetchedMusic == null ? 0 : 1,
                       itemBuilder: (BuildContext context,int index){
                         return Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage("${fetchedMusic.image}"),
-                                fit: BoxFit.cover,
-                                // colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.darken)
-                              )
-                          ),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaY: 5,sigmaX: 5),
                             child: Column(
                               children: [
-                                SizedBox(height: 100),
+                                SizedBox(height: 30),
                                 GestureDetector(
                                   onTap: (){
                                     setState(() {
@@ -104,44 +98,43 @@ class _playerPageState extends State<playerPage> {
                                           fit: BoxFit.fill,
                                         ),
                                       ),
-                                      GestureDetector(
-                                        onTap: (){
-                                          setState(() {
-                                            Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => lyricsPage(lyrics:""),
-                                            ));
-                                          });
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.all(10),
-                                          width: 70,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(5),
-                                              color: Color.fromRGBO(248, 135, 88, 1)
-                                          ),
-                                          // color: Color.fromRGBO(248, 135, 88, 1),
-                                          child: Center(
-                                            child: Text(
-                                              'Lyrics',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
+                                      // GestureDetector(
+                                      //   onTap: (){
+                                      //     setState(() {
+                                      //       Navigator.of(context).push(MaterialPageRoute(
+                                      //         builder: (context) => lyricsPage(lyrics:""),
+                                      //       ));
+                                      //     });
+                                      //   },
+                                      //   child: Container(
+                                      //     margin: EdgeInsets.all(10),
+                                      //     width: 70,
+                                      //     height: 30,
+                                      //     decoration: BoxDecoration(
+                                      //       borderRadius: BorderRadius.circular(5),
+                                      //         color: Color.fromRGBO(248, 135, 88, 1)
+                                      //     ),
+                                      //     child: Center(
+                                      //       child: Text(
+                                      //         'Lyrics',
+                                      //         style: TextStyle(
+                                      //           color: Colors.white,
+                                      //           fontWeight: FontWeight.bold,
+                                      //           fontSize: 16
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // )
                                     ],
                                   ),
                                 ),
                                 // SizedBox(height: 80),
                                 Container(
-                                  margin: EdgeInsets.only(left: 80,top: 25),
+                                  margin: EdgeInsets.only(left: 45,top: 25),
                                   child: Row(
                                     children: [
-                                      Icon(FeatherIcons.thumbsUp,color: Colors.white,),
+                                      Icon(FeatherIcons.heart,color: Colors.black,),
                                       SizedBox(width: 60),
                                       GestureDetector(
                                         onTap: (){
@@ -150,17 +143,24 @@ class _playerPageState extends State<playerPage> {
                                             builder: (context) => DownloadingDialog(path:"${path}/${fetchedMusic.title}",file_name:fetchedMusic.title),
                                           );
                                         },
-                                          child: Icon(FeatherIcons.download,color: Colors.white,)
+                                          child: Icon(FeatherIcons.download,color: Colors.black,)
                                       ),
                                       SizedBox(width: 60),
                                       GestureDetector(
                                           onTap: (){
                                             Share.share('${fetchedMusic.title}\n${fetchedMusic.music_description}', subject: 'Look what I made!');
                                           },
-                                          child: Icon(FeatherIcons.share2,color: Colors.white,
+                                          child: Icon(FeatherIcons.share2,color: Colors.black,
                                           )
                                       ),
                                       SizedBox(width: 60),
+                                      GestureDetector(
+                                          onTap: (){
+                                            openAlert();
+                                          },
+                                          child: Icon(FeatherIcons.plus,color: Colors.black,
+                                          )
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -195,7 +195,7 @@ class _playerPageState extends State<playerPage> {
                                                       style: TextStyle(
                                                           fontSize:30,
                                                           fontWeight: FontWeight.bold,
-                                                          color: Colors.white
+                                                          color: Colors.black
                                                       ),
                                                     ),
                                                     Text(
@@ -206,9 +206,14 @@ class _playerPageState extends State<playerPage> {
                                                         // fontWeight: FontWeight.bold,
                                                       ),
                                                     ),
-                                                    SizedBox(height:60),
-                                                    MyAp(path:"assets/audio/${fetchedMusic.path}",playlist: [])
-                                                    // Player(path:"assets/audio}")
+                                                    SizedBox(height:30),
+                                                    TextButton(onPressed: () async{
+                                                      String response;
+                                                      response = await rootBundle.loadString('assets/text/text.txt');
+                                                      textFile = response;
+                                                      showTest();
+                                                    }, child: Text('Lyrics',style: TextStyle(fontSize: 20,color: Colors.black))),
+                                                    Container(margin: EdgeInsets.only(top: 30),child: MyAp(path:"assets/audio/${fetchedMusic.path}",playlist: [])),
                                                   ],
                                                 ),
                                               );
@@ -220,7 +225,7 @@ class _playerPageState extends State<playerPage> {
                                 )
                               ],
                             ),
-                          ),
+                          // ),
                         );
                       }
                   );
@@ -231,4 +236,68 @@ class _playerPageState extends State<playerPage> {
       ),
     );
   }
+
+  Future<String?> openAlert() => showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Select a playlist',style: TextStyle(fontSize: 25)),
+        content:Column(
+          children: [
+            Align(alignment: Alignment.centerLeft,child: Text('Cool playlist',style: TextStyle(fontSize: 17))),
+            SizedBox(height: 5),
+            Align(alignment: Alignment.centerLeft,child: Text('10',style: TextStyle(fontSize: 15,color: Colors.grey)))
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: (){
+            createPlaylist();
+          },
+              child: Text('New Playlist',style: TextStyle(fontSize: 18))
+          )
+        ],
+      )
+  );
+
+  Future<String?> createPlaylist() => showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Playlist name'),
+        content: TextField(
+          // controller: playlistnameController,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText:'Enter your playlist name',
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: (){
+            // submit();
+          },
+              child: Text('CREATE',style: TextStyle(fontSize: 18))
+          )
+        ],
+      )
+  );
+
+  Future showTest() => showSlidingBottomSheet(
+      context,
+      builder: (context) => SlidingSheetDialog(
+        snapSpec: SnapSpec(snappings: [0.4, 0.7]),
+        builder: buildSheet,
+      )
+  );
+
+  Widget buildSheet(context, state) => Material(
+    child: Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Center(
+            child: Text(textFile,style: TextStyle(fontSize: 18)),
+          ),
+        )
+      ],
+    ),
+  );
+
 }

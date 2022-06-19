@@ -21,6 +21,7 @@
 //   }
 // }
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
@@ -46,12 +47,11 @@ class _MyApState extends State<MyAp> {
   @override
   void initState() {
     super.initState();
-    _pageManager = PageManager(widget.playlist);
+    _pageManager = PageManager(widget.path);
   }
 
   @override
   void dispose() {
-    // print('here');
     _pageManager!.dispose();
     super.dispose();
   }
@@ -380,7 +380,7 @@ class PageManager {
     _init(path);
   }
 
-  void _init(List pt) async {
+  void _init(String pt) async {
     _audioPlayer = AudioPlayer();
     _setInitialPlaylist(pt);
     _listenForChangesInPlayerState();
@@ -391,11 +391,12 @@ class PageManager {
   }
 
   // TODO: set playlist
-  void _setInitialPlaylist(List url) async {
-    String? url;
-    for(int i=0;i<url!.length;i++){
-      await _audioPlayer.setAsset(url[i]);
-    }
+  void _setInitialPlaylist(String url) async {
+    // String? url;
+    // for(int i=0;i<url!.length;i++){
+    //   await _audioPlayer.setAsset(url[i]);
+    // }
+    await _audioPlayer.setAsset(url);
   }
 
   void _listenForChangesInPlayerState() {

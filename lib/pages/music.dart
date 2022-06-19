@@ -20,11 +20,10 @@ class Music extends StatefulWidget {
 
 class _MusicState extends State<Music> {
   List? music;
-
   List? album;
 
   Future getPodcast() async{
-    var response = await http.get(Uri.parse('http://192.168.43.127:5000/music'));
+    var response = await http.get(Uri.parse('http://${IpAddresse}:5000/music'));
 
     if(response.statusCode == 200){
       music = json.decode(response.body);

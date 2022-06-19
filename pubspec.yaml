@@ -56,7 +56,10 @@ dependencies:
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0
   path_provider: ^2.0.10
-#  google_sign_in: ^5.3.1
+  google_sign_in: ^5.3.1
+  sliding_sheet: ^0.5.2
+  audio_service: ^0.18.4
+#  flushbar: ^1.10.4
 #  flutter_stripe: ^2.3.0
 dev_dependencies:
   flutter_test:
@@ -86,6 +89,7 @@ flutter:
     - assets/images/
     - assets/audio/
     - lib/l10n/
+    - assets/text/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
