@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:awud_app/localization/language_constants.dart';
 import 'package:awud_app/pages/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import "package:awud_app/pages/audiobook.dart";
 import "package:awud_app/pages/library.dart";
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 var IpAddresse = "192.168.43.128";
 
 void main() async {
@@ -35,6 +36,10 @@ class navBar extends StatefulWidget {
   //   _navBarState? state = context.findAncestorStateOfType<_navBarState>();
   //   state?.setLocale(newLocale);
   // }
+  static void setLocale(BuildContext context, Locale newLocale) {
+    _navBarState? state = context.findAncestorStateOfType<_navBarState>();
+    state?.setLocale(newLocale);
+  }
 }
 
 class _navBarState extends State<navBar> {
@@ -52,7 +57,18 @@ class _navBarState extends State<navBar> {
   //   getLocale().then((locale) => {setLocale(locale)});
   //   super.didChangeDependencies();
   // }
+  Locale? _locale;
+  setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
+  @override
+  void didChangeDependencies() {
+    getLocale().then((locale) => {setLocale(locale)});
+    super.didChangeDependencies();
+  }
   final screens = [
     // const login(),
     const Music(),
@@ -120,10 +136,10 @@ class _navBarState extends State<navBar> {
         //   return supportedLocales.first;
         // },
 
-        // localizationsDelegates: AppLocalizations.localizationsDelegates,
-        // supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
 
-        // locale: _locale,
+        locale: _locale,
         home: Scaffold(
       body: PageView.builder(
           itemCount: 5,

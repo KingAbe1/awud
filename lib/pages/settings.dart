@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:awud_app/class/language.dart';
+import 'package:awud_app/localization/language_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_stripe/flutter_stripe.dart';
-
+import 'package:awud_app/main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -50,11 +52,68 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 200,
                   color: Colors.green,
                   child: Center(
-                    child: Text('Pay with yenepay' , style: TextStyle(color: Colors.white , fontSize: 20),),
+                    child: Text(translation(context).pi , style: TextStyle(color: Colors.white , fontSize: 20),),
+                   // child: Text('Pay with yenepay' , style: TextStyle(color: Colors.white , fontSize: 20),),
                   ),
                 ),
               ),
             ),
+            SizedBox(height: 30),
+
+    GestureDetector(
+    onTap: () => {
+    showDialog(
+    context: context,
+    builder: (BuildContext context) {
+    return AlertDialog(
+    title: Text('languages'),
+    content: Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: DropdownButton<Language>(
+    underline: const SizedBox(),
+    icon: const Icon(
+    Icons.language,
+    color: Colors.white,
+    ),
+    onChanged: (Language? language) async {
+    if (language != null) {
+    Locale _locale = await setLocale(language.languageCode);
+    navBar.setLocale(context, _locale);
+    }
+    },
+    items: Language.languageList()
+        .map<DropdownMenuItem<Language>>(
+    (e) => DropdownMenuItem<Language>(
+    value: e,
+    child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: <Widget>[
+    // Text(
+    //   e.flag,
+    //   style: const TextStyle(fontSize: 30),
+    // ),
+    Text(e.name)
+    ],
+    ),
+    ),
+    )
+        .toList(),
+    ),
+    ),
+    );
+    })
+    },
+    child: Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+    child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+    Text('language', style: TextStyle(fontSize: 20, color: Colors.grey[600])),
+    Icon(Icons.arrow_forward_ios, color: Colors.grey),
+    ],
+    ),
+    ),
+    )
           ],
         ),
       )
@@ -75,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
               testEnv: true,
               style: ThemeMode.dark,
               merchantCountryCode: 'US',
-              merchantDisplayName: 'ANNIE')).then((value){
+              merchantDisplayName: 'Biruk')).then((value){
       });
 
 

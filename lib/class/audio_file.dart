@@ -26,6 +26,7 @@ import 'package:flutter/foundation.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'global.dart';
 // void main() => runApp(MyApp());
 
 late AudioPlayer _audioPlayer;
@@ -46,15 +47,26 @@ PageManager? _pageManager;
 class _MyApState extends State<MyAp> {
   @override
   void initState() {
-    print(widget.playlist);
     super.initState();
-    _pageManager = PageManager(widget.path);
+    _pageManager = PageManager(widget.playlist);
   }
 
   @override
   void dispose() {
     _pageManager!.dispose();
     super.dispose();
+  }
+
+  void previous(){
+    setState(() {
+      globalVar().index - 1;
+    });
+  }
+
+  void next(){
+    setState(() {
+      globalVar().index + 1;
+    });
   }
 
   @override
@@ -249,6 +261,7 @@ class PreviousSongButton extends StatelessWidget {
 
 class PlayButton extends StatelessWidget {
   const PlayButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ButtonState>(
@@ -280,12 +293,12 @@ class PlayButton extends StatelessWidget {
   }
 }
 
-// Widget _nextButton() {
-//   return IconButton(
-//     icon: Icon(Icons.skip_next),
-//     onPressed: _audioPlayer.hasNext ? _audioPlayer.seekToNext : null,
-//   );
-// }
+Widget _nextButton() {
+  return IconButton(
+    icon: Icon(Icons.skip_next),
+    onPressed: _audioPlayer.hasNext ? _audioPlayer.seekToNext : null,
+  );
+}
 
 class NextSongButton extends StatelessWidget {
   const NextSongButton({Key? key}) : super(key: key);
@@ -323,7 +336,7 @@ class ShuffleButton extends StatelessWidget {
 
 class PlayButtonNotifier extends ValueNotifier<ButtonState> {
   PlayButtonNotifier() : super(_initialValue);
-  static const _initialValue = ButtonState.playing;
+  static const _initialValue = ButtonState.paused;
 }
 
 enum ButtonState { playing, paused, loading}
@@ -368,7 +381,8 @@ enum RepeatState {
   repeatPlaylist,
 }
 
-class PageManager {
+class PageManager{
+
   final currentSongTitleNotifier = ValueNotifier<String>('');
   final playlistNotifier = ValueNotifier<List<String>>([]);
   final progressNotifier = ProgressNotifier();
@@ -382,7 +396,7 @@ class PageManager {
     _init(path);
   }
 
-  void _init(String pt) async {
+  void _init(List pt) async {
     _audioPlayer = AudioPlayer();
     _setInitialPlaylist(pt);
     _listenForChangesInPlayerState();
@@ -393,12 +407,8 @@ class PageManager {
   }
 
   // TODO: set playlist
-  void _setInitialPlaylist(String url) async {
-    // String? url;
-    // for(int i=0;i<url!.length;i++){
-    //   await _audioPlayer.setAsset(url[i]);
-    // }
-    await _audioPlayer.setAsset(url);
+  void _setInitialPlaylist(List url) async {
+    await _audioPlayer.setAsset(url.elementAt(globalVar().index));
   }
 
   void _listenForChangesInPlayerState() {
@@ -497,7 +507,10 @@ class PageManager {
   }
 
   void onPreviousSongButtonPressed() {
-    _audioPlayer.seekToPrevious();
+    if(globalVar().index != 0){
+     _MyApState().previous();
+    }
+    // _audioPlayer.seekToPrevious();
     // _audioPlayer.hasPrevious ? _audioPlayer.seekToPrevious : print('no previous');
   }
 
@@ -537,4 +550,5 @@ class PageManager {
   void removeSong() {
     // TODO
   }
+  
 }
