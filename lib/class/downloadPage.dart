@@ -22,6 +22,7 @@ class _DownloadingDialogState extends State<DownloadingDialog> {
     String fileName = widget.file_name;
 
     String path = await _getFilePath(fileName);
+    print(path);
 
     await dio.download(
       url,
@@ -40,8 +41,8 @@ class _DownloadingDialogState extends State<DownloadingDialog> {
   }
 
   Future<String> _getFilePath(String filename) async {
-    final dir = await getApplicationDocumentsDirectory();
-    return "${dir.path}/$filename";
+    final dir = await getExternalStorageDirectories(type: StorageDirectory.music);
+    return "${dir![0].path}/$filename";
   }
 
   @override

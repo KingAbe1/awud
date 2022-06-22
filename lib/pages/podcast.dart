@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../main.dart';
+import 'categoryPodcastList.dart';
 import 'settings.dart';
 import 'notifications.dart';
 import 'search.dart';
@@ -21,9 +22,9 @@ class Podcast extends StatefulWidget {
 class _PodcastState extends State<Podcast> {
   List? jsonData;
   List? episodes;
-  // String value = '';
+
   Future getPodcast() async{
-    var response = await http.get(Uri.parse('http://${IpAddresse}:5000/podcast'));
+    var response = await http.get(Uri.parse('http://${IpAddresse}:8000/podcast'));
 
     if(response.statusCode == 200){
       jsonData = json.decode(response.body);
@@ -41,6 +42,7 @@ class _PodcastState extends State<Podcast> {
   Widget build(BuildContext context) {
     getPodcast();
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         routes: {
           '/notification': (context) => Notifications(),
           '/setting': (context) => HomeScreen()
@@ -84,19 +86,6 @@ class _PodcastState extends State<Podcast> {
                                         size: 20,
                                       ),
                                     )
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: GestureDetector(
-                                    onTap: (){
-                                      Navigator.pushNamed(context, '/notification');
-                                    },
-                                    child: Icon(
-                                      FeatherIcons.bell,
-                                      color: Color.fromRGBO(248, 135, 88, 1),
-                                      size: 20,
-                                    ),
-                                  ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 20),
@@ -173,14 +162,14 @@ class _PodcastState extends State<Podcast> {
                                                     setState(() {
                                                       // print((json.decode(jsonData![index])).runtimeType);
                                                       Navigator.of(context).push(MaterialPageRoute(
-                                                        builder: (context) => infoPage(id: jsonData![index]['_id'].toString(),name: jsonData![index]['podcast_title'].toString()),
+                                                        builder: (context) => infoPage(id: jsonData![index]['_id'].toString(),name: jsonData![index]['title'].toString()),
                                                       ));
                                                     });
                                                   },
                                                   child: ClipRRect(
                                                       borderRadius: BorderRadius.circular(5),
-                                                      child: Image.asset(
-                                                        '${jsonData![index]['image']}',
+                                                      child: Image.network(
+                                                        'http://$IpAddresse:8000${jsonData![index]['image']}',
                                                         height: 100,
                                                         width: 100,
                                                         fit: BoxFit.fill,
@@ -189,14 +178,14 @@ class _PodcastState extends State<Podcast> {
                                                 ),
                                                 SizedBox(height: 10),
                                                 Text(
-                                                  jsonData![index]['podcast_title'],
+                                                  jsonData![index]['title'],
                                                   style: TextStyle(
                                                       fontSize: 15
                                                   ),
                                                 ),
                                                 SizedBox(height: 5),
                                                 Text(
-                                                  jsonData![index]['artist_name'],
+                                                  jsonData![index]['podcasters'],
                                                   style: TextStyle(
                                                       color: Colors.grey
                                                   ),
@@ -216,7 +205,7 @@ class _PodcastState extends State<Podcast> {
                             margin: EdgeInsets.only(top: 20,left: 5),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text('Technology',
+                              child: Text('Arts',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -249,7 +238,7 @@ class _PodcastState extends State<Podcast> {
                                       scrollDirection: Axis.horizontal,
                                       itemCount: jsonData == null ? 0: jsonData!.length,
                                       itemBuilder: (BuildContext context, int index){
-                                        if((jsonData![index]['category']).contains('Technology')){
+                                        if((jsonData![index]['category']).contains('Arts')){
                                           return Container(
                                             child: SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
@@ -260,14 +249,14 @@ class _PodcastState extends State<Podcast> {
                                                       setState(() {
                                                         // print((json.decode(jsonData![index])).runtimeType);
                                                         Navigator.of(context).push(MaterialPageRoute(
-                                                          builder: (context) => infoPage(id: jsonData![index]['_id'].toString(),name: jsonData![index]['podcast_title'].toString()),
+                                                          builder: (context) => infoPage(id: jsonData![index]['_id'].toString(),name: jsonData![index]['title'].toString()),
                                                         ));
                                                       });
                                                     },
                                                     child: ClipRRect(
                                                         borderRadius: BorderRadius.circular(5),
-                                                        child: Image.asset(
-                                                          '${jsonData![index]['image']}',
+                                                        child: Image.network(
+                                                          'http://$IpAddresse:8000${jsonData![index]['image']}',
                                                           height: 100,
                                                           width: 100,
                                                           fit: BoxFit.fill,
@@ -276,14 +265,14 @@ class _PodcastState extends State<Podcast> {
                                                   ),
                                                   SizedBox(height: 10),
                                                   Text(
-                                                    jsonData![index]['podcast_title'],
+                                                    jsonData![index]['title'],
                                                     style: TextStyle(
                                                         fontSize: 15
                                                     ),
                                                   ),
                                                   SizedBox(height: 5),
                                                   Text(
-                                                    jsonData![index]['artist_name'],
+                                                    jsonData![index]['podcasters'],
                                                     style: TextStyle(
                                                         color: Colors.grey
                                                     ),
@@ -306,7 +295,7 @@ class _PodcastState extends State<Podcast> {
                             margin: EdgeInsets.only(top: 20,left: 5),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text('Entertainment',
+                              child: Text('News',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -339,7 +328,7 @@ class _PodcastState extends State<Podcast> {
                                       scrollDirection: Axis.horizontal,
                                       itemCount: jsonData == null ? 0: jsonData!.length,
                                       itemBuilder: (BuildContext context, int index){
-                                        if((jsonData![index]['category']).contains('Entertainment')){
+                                        if((jsonData![index]['category']).contains('News')){
                                           return Container(
                                             child: SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
@@ -347,14 +336,14 @@ class _PodcastState extends State<Podcast> {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      setState(() {
-                                                        print(jsonData![index]['podcast_title']);
-                                                      });
+                                                      Navigator.of(context).push(MaterialPageRoute(
+                                                        builder: (context) => infoPage(id: jsonData![index]['_id'].toString(),name: jsonData![index]['title'].toString()),
+                                                      ));
                                                     },
                                                     child: ClipRRect(
                                                         borderRadius: BorderRadius.circular(5),
-                                                        child: Image.asset(
-                                                          '${jsonData![index]['image']}',
+                                                        child: Image.network(
+                                                          'http://$IpAddresse:8000${jsonData![index]['image']}',
                                                           height: 100,
                                                           width: 100,
                                                           fit: BoxFit.fill,
@@ -363,14 +352,14 @@ class _PodcastState extends State<Podcast> {
                                                   ),
                                                   SizedBox(height: 10),
                                                   Text(
-                                                    jsonData![index]['podcast_title'],
+                                                    jsonData![index]['title'],
                                                     style: TextStyle(
                                                         fontSize: 15
                                                     ),
                                                   ),
                                                   SizedBox(height: 5),
                                                   Text(
-                                                    jsonData![index]['artist_name'],
+                                                    jsonData![index]['podcasters'],
                                                     style: TextStyle(
                                                         color: Colors.grey
                                                     ),
@@ -389,6 +378,110 @@ class _PodcastState extends State<Podcast> {
                               },
                             ),
                           ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20,left: 5),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Category',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Column(
+                              // crossAxisAlignment: CrossAxisAlignment,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: (){
+                                        displayCategoryPage("Comedy");
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color.fromRGBO(248, 135, 88, 1),
+                                            style: BorderStyle.solid,
+                                          ),
+                                          color: Color.fromRGBO(248, 135, 88, 1),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Center(child: Text('Comedy',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18)),),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: (){
+                                        displayCategoryPage("Politics");
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color.fromRGBO(248, 135, 88, 1),
+                                            style: BorderStyle.solid,
+                                          ),
+                                          color: Color.fromRGBO(248, 135, 88, 1),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Center(child: Text('Politics',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: (){
+                                        displayCategoryPage("Sports");
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color.fromRGBO(248, 135, 88, 1),
+                                            style: BorderStyle.solid,
+                                          ),
+                                          color: Color.fromRGBO(248, 135, 88, 1),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Center(child: Text('Sports',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: (){
+                                        displayCategoryPage("Technology");
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color.fromRGBO(248, 135, 88, 1),
+                                            style: BorderStyle.solid,
+                                          ),
+                                          color: Color.fromRGBO(248, 135, 88, 1),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Center(child: Text('Technology',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -398,5 +491,9 @@ class _PodcastState extends State<Podcast> {
           ),
         )
     );
+  }
+
+  void displayCategoryPage(String s) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => categoryPodcastList(name:s.toString())));
   }
 }

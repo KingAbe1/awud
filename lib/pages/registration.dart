@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 30.0,
                                 ),
                                 Text(
-                                  'Phone Number or Email address',
+                                  'Phone Number',
                                   style: kLabelStyle,
                                 ),
                                 SizedBox(height: 10.0),
@@ -225,17 +225,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                     validator: (value) {
                                       if(value!.isNotEmpty){
                                         if(isNumeric(value)){
-                                          if(!RegExp(r'^[0-9]{12,13}$').hasMatch(value)){
+                                          if(!RegExp(r'^[0-9]{10,13}$').hasMatch(value)){
                                             return "Enter correct phone number";
-                                          }
-                                        }else{
-                                          if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)){
-                                            return "Enter correct email address";
                                           }
                                         }
                                       }
                                       else{
-                                        return "Phone Number or Email address field can't be empty";
+                                        return "Phone Number field can't be empty";
                                       }
                                     },
                                   ),

@@ -11,6 +11,7 @@ class Favuorite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: {
         '/notification': (context) => Notifications(),
         '/setting': (context) => HomeScreen(),

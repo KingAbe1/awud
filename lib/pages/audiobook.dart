@@ -1,4 +1,5 @@
 import 'package:awud_app/class/infoPageAudiobook.dart';
+import 'package:awud_app/pages/categoryAudiobookList.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
 import 'settings.dart';
@@ -24,7 +25,7 @@ class _AudiobookState extends State<Audiobook> {
   // String value = '';
   Future getPodcast() async {
     var response = await http.get(
-        Uri.parse('http://${IpAddresse}:5000/audioBook'));
+        Uri.parse('http://$IpAddresse:8000/audioBook'));
 
     if (response.statusCode == 200) {
       jsonData = json.decode(response.body);
@@ -41,6 +42,7 @@ class _AudiobookState extends State<Audiobook> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         routes: {
           '/notification': (context) => Notifications(),
           '/setting': (context) => HomeScreen()
@@ -85,20 +87,6 @@ class _AudiobookState extends State<Audiobook> {
                                         size: 20,
                                       ),
                                     )
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, '/notification');
-                                    },
-                                    child: Icon(
-                                      FeatherIcons.bell,
-                                      color: Color.fromRGBO(248, 135, 88, 1),
-                                      size: 20,
-                                    ),
-                                  ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 20),
@@ -186,10 +174,10 @@ class _AudiobookState extends State<Audiobook> {
                                                           MaterialPageRoute(
                                                             builder: (
                                                                 context) =>
-                                                                infoPagePodcast(
+                                                                infoPageAudiobook(
                                                                     id: jsonData![index]['_id']
                                                                         .toString(),
-                                                                    name: jsonData![index]['audiobook_title']
+                                                                    name: jsonData![index]['title']
                                                                         .toString()),
                                                           ));
                                                     });
@@ -197,17 +185,17 @@ class _AudiobookState extends State<Audiobook> {
                                                   child: ClipRRect(
                                                       borderRadius: BorderRadius
                                                           .circular(5),
-                                                      child: Image.asset(
-                                                        '${jsonData![index]['image']}',
+                                                      child: Image.network(
+                                                        'http://$IpAddresse:8000/${jsonData![index]['image']}',
                                                         height: 150,
                                                         width: 100,
-                                                        fit: BoxFit.fill,
+                                                        fit: BoxFit.fitWidth,
                                                       )
                                                   ),
                                                 ),
                                                 SizedBox(height: 10),
                                                 Text(
-                                                  jsonData![index]['audiobook_title'],
+                                                  jsonData![index]['title'],
                                                   style: TextStyle(
                                                       fontSize: 15
                                                   ),
@@ -290,10 +278,10 @@ class _AudiobookState extends State<Audiobook> {
                                                             MaterialPageRoute(
                                                               builder: (
                                                                   context) =>
-                                                                  infoPagePodcast(
+                                                                  infoPageAudiobook(
                                                                       id: jsonData![index]['_id']
                                                                           .toString(),
-                                                                      name: jsonData![index]['audiobook_title']
+                                                                      name: jsonData![index]['title']
                                                                           .toString()),
                                                             ));
                                                       });
@@ -311,7 +299,7 @@ class _AudiobookState extends State<Audiobook> {
                                                   ),
                                                   SizedBox(height: 10),
                                                   Text(
-                                                    jsonData![index]['audiobook_title'],
+                                                    jsonData![index]['title'],
                                                     style: TextStyle(
                                                         fontSize: 15
                                                     ),
@@ -341,7 +329,7 @@ class _AudiobookState extends State<Audiobook> {
                             margin: EdgeInsets.only(top: 20, left: 5),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text('Entertainment',
+                              child: Text('Fiction',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -382,7 +370,7 @@ class _AudiobookState extends State<Audiobook> {
                                       itemBuilder: (BuildContext context,
                                           int index) {
                                         if ((jsonData![index]['category'])
-                                            .contains('Entertainment')) {
+                                            .contains('Fiction')) {
                                           return Container(
                                             child: SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
@@ -397,10 +385,10 @@ class _AudiobookState extends State<Audiobook> {
                                                             MaterialPageRoute(
                                                               builder: (
                                                                   context) =>
-                                                                  infoPagePodcast(
+                                                                  infoPageAudiobook(
                                                                       id: jsonData![index]['_id']
                                                                           .toString(),
-                                                                      name: jsonData![index]['audiobook_title']
+                                                                      name: jsonData![index]['title']
                                                                           .toString()),
                                                             ));
                                                       });
@@ -408,8 +396,8 @@ class _AudiobookState extends State<Audiobook> {
                                                     child: ClipRRect(
                                                         borderRadius: BorderRadius
                                                             .circular(5),
-                                                        child: Image.asset(
-                                                          '${jsonData![index]['image']}',
+                                                        child: Image.network(
+                                                          'http://$IpAddresse:8000/${jsonData![index]['image']}',
                                                           height: 150,
                                                           width: 100,
                                                           fit: BoxFit.fill,
@@ -418,7 +406,7 @@ class _AudiobookState extends State<Audiobook> {
                                                   ),
                                                   SizedBox(height: 10),
                                                   Text(
-                                                    jsonData![index]['audiobook_title'],
+                                                    jsonData![index]['title'],
                                                     style: TextStyle(
                                                         fontSize: 15
                                                     ),
@@ -444,6 +432,110 @@ class _AudiobookState extends State<Audiobook> {
                               },
                             ),
                           ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20,left: 5),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Category',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Column(
+                              // crossAxisAlignment: CrossAxisAlignment,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: (){
+                                        displayCategoryPage("Comedy");
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color.fromRGBO(248, 135, 88, 1),
+                                            style: BorderStyle.solid,
+                                          ),
+                                          color: Color.fromRGBO(248, 135, 88, 1),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Center(child: Text('Comedy',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18)),),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: (){
+                                        displayCategoryPage("Philosophy");
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color.fromRGBO(248, 135, 88, 1),
+                                            style: BorderStyle.solid,
+                                          ),
+                                          color: Color.fromRGBO(248, 135, 88, 1),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Center(child: Text('Philosophy',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: (){
+                                        displayCategoryPage("Fitness");
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color.fromRGBO(248, 135, 88, 1),
+                                            style: BorderStyle.solid,
+                                          ),
+                                          color: Color.fromRGBO(248, 135, 88, 1),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Center(child: Text('Fitness',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: (){
+                                        displayCategoryPage("Religion");
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color.fromRGBO(248, 135, 88, 1),
+                                            style: BorderStyle.solid,
+                                          ),
+                                          color: Color.fromRGBO(248, 135, 88, 1),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Center(child: Text('Religion',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -453,5 +545,9 @@ class _AudiobookState extends State<Audiobook> {
           ),
         )
     );
+  }
+
+  void displayCategoryPage(String s) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => categoryAudiobookList(name:s.toString())));
   }
 }

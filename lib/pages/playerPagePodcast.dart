@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:ui';
 
+// import 'package:awud_app/class/audio_file.dart';
+import 'package:awud_app/class/audio_filePodcast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -8,7 +10,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
 import '../main.dart';
-import 'audio_file.dart';
+
 
 class playerPage extends StatefulWidget {
   final String value;
@@ -29,7 +31,7 @@ class _playerPageState extends State<playerPage> {
   var episode;
 
   Future printValue() async{
-    var response = await http.get(Uri.parse('http://${IpAddresse}:8000/audioBook/${widget.value}'));
+    var response = await http.get(Uri.parse('http://${IpAddresse}:8000/podcast/${widget.value}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);

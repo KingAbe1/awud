@@ -1,6 +1,7 @@
 import 'package:awud_app/API/audiobook_api.dart';
 import 'package:awud_app/class/infoPage.dart';
 import 'package:awud_app/class/infoPageAudiobook.dart';
+import 'package:awud_app/main.dart';
 import 'package:awud_app/model/audiobookModel.dart';
 import 'package:flutter/material.dart';
 
@@ -61,7 +62,7 @@ class MySearchDelegate extends SearchDelegate{
                         child: Center(
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(5),
-                              child: Image.asset('${data?[index].image}')
+                              child: Image.network('http://$IpAddresse:8000/${data?[index].image}')
                           ),
                         ),
                       ),
@@ -69,14 +70,14 @@ class MySearchDelegate extends SearchDelegate{
                       GestureDetector(
                         onTap: (){
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => infoPagePodcast(id: (data?[index].id).toString(),name: (data?[index].audiobook_title).toString()),
+                            builder: (context) => infoPageAudiobook(id: (data?[index].id).toString(),name: (data?[index].title).toString()),
                           ));
                         },
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${data?[index].audiobook_title}',
+                                '${data?[index].title}',
                                 style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold

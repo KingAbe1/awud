@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 200,
                   color: Colors.green,
                   child: Center(
-                    child: Text(translation(context).pi , style: TextStyle(color: Colors.white , fontSize: 20),),
+                    // child: Text(translation(context).pi , style: TextStyle(color: Colors.white , fontSize: 20),),
                    // child: Text('Pay with yenepay' , style: TextStyle(color: Colors.white , fontSize: 20),),
                   ),
                 ),
@@ -76,10 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
     color: Colors.white,
     ),
     onChanged: (Language? language) async {
-    if (language != null) {
-    Locale _locale = await setLocale(language.languageCode);
-    navBar.setLocale(context, _locale);
-    }
+    // if (language != null) {
+    // Locale _locale = await setLocale(language.languageCode);
+    // navBar.setLocale(context, _locale);
+    // }
     },
     items: Language.languageList()
         .map<DropdownMenuItem<Language>>(

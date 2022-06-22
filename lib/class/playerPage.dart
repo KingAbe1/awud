@@ -162,7 +162,7 @@ class _playerPageState extends State<playerPage> {
                                                       ),
                                                     ),
                                                     SizedBox(height:60),
-                                                    MyAp(path:"assets/audio/${episode['episode_audio']}",playlist: [],)
+                                                    // MyAppp(path:"assets/audio/${episode['episode_audio']}",playlist: [],)
                                                     // Player(path:"assets/audio}")
                                                   ],
                                                 ),

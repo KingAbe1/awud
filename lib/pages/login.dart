@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Phone Number or Email Address',
+                                  'Username',
                                   style: kLabelStyle,
                                 ),
                                 SizedBox(height: 10.0),
@@ -170,25 +170,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                         Icons.phone,
                                         color: Colors.white,
                                       ),
-                                      hintText: 'Enter your Phone Number or Email Address',
+                                      hintText: 'Enter your Username',
                                       hintStyle: kHintTextStyle,
                                     ),
-                                    validator: (value){
-                                      if(value!.isNotEmpty){
-                                        if(isNumeric(value)){
-                                          if(!RegExp(r'^[+][0-9]{12,13}$').hasMatch(value)){
-                                            return "Enter correct phone number";
-                                          }
-                                        }else{
-                                          if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)){
-                                            return "Enter correct email address";
-                                          }
-                                        }
-                                      }
-                                      else{
-                                        return "Phone Number or Email address field can't be empty";
-                                      }
-                                    },
+                                    validator: (value) => value!.isEmpty ? 'Username filed can\'t be empty' : null,
                                   ),
                                 ),
                                 SizedBox(

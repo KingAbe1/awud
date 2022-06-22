@@ -10,8 +10,8 @@ import "package:awud_app/pages/audiobook.dart";
 import "package:awud_app/pages/library.dart";
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-var IpAddresse = "192.168.43.128";
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+var IpAddresse = "192.168.85.229";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,11 +64,11 @@ class _navBarState extends State<navBar> {
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    getLocale().then((locale) => {setLocale(locale)});
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   getLocale().then((locale) => {setLocale(locale)});
+  //   super.didChangeDependencies();
+  // }
   final screens = [
     // const login(),
     const Music(),
@@ -136,9 +136,9 @@ class _navBarState extends State<navBar> {
         //   return supportedLocales.first;
         // },
 
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-
+        // localizationsDelegates: AppLocalizations.localizationsDelegates,
+        // supportedLocales: AppLocalizations.supportedLocales,
+        debugShowCheckedModeBanner: false,
         locale: _locale,
         home: Scaffold(
       body: PageView.builder(

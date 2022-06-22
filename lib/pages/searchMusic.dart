@@ -1,5 +1,6 @@
 import 'package:awud_app/API/music_api.dart';
 import 'package:awud_app/class/playerPageMusic.dart';
+import 'package:awud_app/main.dart';
 import 'package:awud_app/model/musicModel.dart';
 import 'package:flutter/material.dart';
 
@@ -61,15 +62,18 @@ class MySearchDelegate extends SearchDelegate{
                         child: Center(
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(5),
-                              child: Image.asset('${data?[index].image}')
+                              child: Image.network('http://$IpAddresse:8000${data?[index].image}')
                           ),
                         ),
                       ),
                       SizedBox(width: 20),
                       GestureDetector(
                         onTap: (){
+                          late List pl = [data![index].path];
+                          late List image = [data![index].image];
+
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => playerPage(id: (data?[index].id).toString(),name: (data?[index].title).toString()),
+                            builder: (context) => playerPage(value: (data![index].id).toString(),epi: (data[index].image).toString(),pl: pl,image: image,title: (data[index].title).toString()),
                           ));
                         },
                         child: Column(

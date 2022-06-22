@@ -1,15 +1,15 @@
 class FetchedPodcast{
-  var artist_name,podcast_title,podcast_description,image,category,rate,id;
+  var podcasters,title,description,image,episodes,rate,id;
 
-  FetchedPodcast({required this.artist_name,required this.podcast_title,required this.podcast_description,required this.image,required this.category,required this.rate,required this.id});
+  FetchedPodcast({required this.podcasters,required this.title,required this.description,required this.image,required this.episodes,required this.rate,required this.id});
 
   factory FetchedPodcast.fromJson(Map<String, dynamic> json) => FetchedPodcast(
     id: json['_id'],
-    artist_name: json['artist_name'],
-    podcast_title: json['podcast_title'],
-    podcast_description: json['podcast_description'],
+    podcasters: json['podcasters'],
+    title: json['title'],
+    description: json['description'],
     image: json['image'],
-    category: json['category'],
+    episodes: json['episodes'],
     rate: json['rate'],
   );
 }

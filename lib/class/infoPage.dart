@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:awud_app/class/playerPage.dart';
+import 'package:awud_app/pages/playerPagePodcast.dart';
 import 'package:awud_app/pages/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import '../main.dart';
 
 class infoPage extends StatefulWidget {
-  // final String value;
   final String id;
   final String name;
 
@@ -23,22 +22,32 @@ class infoPage extends StatefulWidget {
 
 class _infoPageState extends State<infoPage> {
 
-  List? result;
+  var result;
   List? episodes;
-  // String value = '';
+  List? playlist = [];
+  var num = 0;
+
+
   Future printValue() async{
-    // print(widget.id);
-    var response = await http.get(Uri.parse('http://${IpAddresse}:5000/podcast/${widget.id}'));
+
+    var response = await http.get(Uri.parse('http://${IpAddresse}:8000/podcast/${widget.id}'));
 
     if(response.statusCode == 200){
       result = json.decode(response.body);
-      // print(jsonData![0]);
+
+      if(num != 1){
+        for(int i=0;i<result!['episodes'].length;i++){
+          playlist!.add("${result!['episodes'][i]['file']}");
+          num = 1;
+        }
+      }
+
       return result;
     }
   }
 
   printEpisode(x) async{
-    var response = await http.get(Uri.parse('http://${IpAddresse}:5000/episode/${widget.id}/epsiode/'));
+    var response = await http.get(Uri.parse('http://${IpAddresse}:8000/episode/${widget.id}/epsiode/'));
 
     if(response.statusCode == 200){
       episodes = json.decode(response.body);
@@ -91,19 +100,6 @@ class _infoPageState extends State<infoPage> {
                                               size: 20,
                                             ),
                                           )
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 20),
-                                        child: GestureDetector(
-                                          onTap: (){
-                                            Navigator.pushNamed(context, '/notification');
-                                          },
-                                          child: Icon(
-                                            FeatherIcons.bell,
-                                            color: Color.fromRGBO(248, 135, 88, 1),
-                                            size: 20,
-                                          ),
-                                        ),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(right: 20),
@@ -163,7 +159,7 @@ class _infoPageState extends State<infoPage> {
                                     }else{
                                       return ListView.builder(
                                           shrinkWrap: true,
-                                          itemCount: result == null ? 0 : result!.length,
+                                          itemCount: result == null ? 0 : 1,
                                           itemBuilder: (BuildContext context,int index){
                                             return Container(
                                               margin: EdgeInsets.all(10),
@@ -174,7 +170,7 @@ class _infoPageState extends State<infoPage> {
                                                       Align(
                                                         alignment:Alignment.centerLeft,
                                                         child:Text(
-                                                          "${result![index]['podcast_title']} - ",
+                                                          "${result!['title']} - ",
                                                           style: TextStyle(
                                                               fontSize: 18,
                                                               fontWeight: FontWeight.bold
@@ -184,7 +180,7 @@ class _infoPageState extends State<infoPage> {
                                                       Align(
                                                         alignment:Alignment.centerLeft,
                                                         child:Text(
-                                                          "${result![0]['episodes'].length} Episodes",
+                                                          "${result!['episodes'].length} Episodes",
                                                           style: TextStyle(
                                                               fontSize: 16,
                                                               color: Colors.black54
@@ -217,7 +213,7 @@ class _infoPageState extends State<infoPage> {
                                                                 return ListView.builder(
                                                                   // shrinkWrap: true,
                                                                     scrollDirection: Axis.vertical,
-                                                                    itemCount: result == null ? 0: result![0]['episodes'].length,
+                                                                    itemCount: result == null ? 0: result!['episodes'].length,
                                                                     itemBuilder: (BuildContext context, int x){
                                                                       return Container(
                                                                         child: Column(
@@ -232,18 +228,23 @@ class _infoPageState extends State<infoPage> {
                                                                                     borderRadius: BorderRadius.circular(5),
                                                                                     child: GestureDetector(
                                                                                       onTap:(){
-                                                                                        setState(() {
+                                                                                        // setState(() {
+                                                                                          // print(result!['_id']);
+                                                                                          // print(result!['episodes'][x]['file']);
+                                                                                          // print(playlist);
+                                                                                          // print(result!['image']);
+                                                                                          // print(result!['title']);
                                                                                           // print((json.decode(jsonData![index])).runtimeType);
                                                                                           Navigator.of(context).push(MaterialPageRoute(
-                                                                                            builder: (context) => playerPage(value: result![0]['_id'].toString(),epi: result![0]['episodes'][x]['_id'].toString()),
+                                                                                            builder: (context) => playerPage(value: result!['_id'].toString(),epi: result!['episodes'][x]['file'].toString(),pl: playlist, image: result!['image'], title: result!['title']),
                                                                                           ));
-                                                                                        });
+                                                                                        // });
                                                                                       },
                                                                                       child: Stack(
                                                                                           alignment: Alignment.center,
                                                                                           children: [
-                                                                                            Image.asset(
-                                                                                              "${result![0]['image']}",
+                                                                                            Image.network(
+                                                                                              "http://$IpAddresse:8000${result!['image']}",
                                                                                               fit: BoxFit.fill,
                                                                                             ),
                                                                                             FaIcon(
@@ -261,14 +262,14 @@ class _infoPageState extends State<infoPage> {
                                                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                                                     children: [
                                                                                       Text(
-                                                                                        "EP#${x+1} ${result![0]['episodes'][x]['episode_name']}",
+                                                                                        "EP#${x+1} ${result!['episodes'][x]['episodeName']}",
                                                                                         style: TextStyle(
                                                                                             fontSize: 17,
                                                                                             fontWeight: FontWeight.bold
                                                                                         ),
                                                                                       ),
                                                                                       Text(
-                                                                                        "${result![0]['episodes'][x]['episode_released_date']}",
+                                                                                        "${result!['createdAt']}",
                                                                                         style: TextStyle(
                                                                                             fontSize: 15,
                                                                                             color: Colors.black54
@@ -276,7 +277,7 @@ class _infoPageState extends State<infoPage> {
                                                                                       ),
                                                                                       SizedBox(height: 15),
                                                                                       Text(
-                                                                                        "${result![0]['episodes'][x]['episode_description']}",
+                                                                                        "${result!['episodes'][x]['description2']}",
                                                                                         style: TextStyle(
                                                                                             fontSize: 15,
                                                                                             color: Colors.black54
@@ -286,7 +287,7 @@ class _infoPageState extends State<infoPage> {
                                                                                       Row(
                                                                                         children: [
                                                                                           Text(
-                                                                                            "${result![0]['episodes'][x]['episode_length']}",
+                                                                                            "${result!['episodes'][x]['episodeLength']} min",
                                                                                           ),
                                                                                           SizedBox(width: 35),
                                                                                           Icon(FeatherIcons.heart,color: Color.fromRGBO(248, 135, 88, 1),),
@@ -338,7 +339,7 @@ class _infoPageState extends State<infoPage> {
                                     );
                                   }else{
                                     return ListView.builder(
-                                      itemCount: result == null ? 0 : result!.length,
+                                      itemCount: result == null ? 0 : 1,
                                       itemBuilder: (BuildContext context,int index){
                                         return Container(
                                           child: Column(
@@ -346,8 +347,8 @@ class _infoPageState extends State<infoPage> {
                                               Stack(
                                                 alignment: Alignment.bottomCenter,
                                                 children: [
-                                                  Image.asset(
-                                                    '${result![index]['image']}',
+                                                  Image.network(
+                                                    'http://$IpAddresse:8000${result!['image']}',
                                                     fit: BoxFit.fill,
                                                   ),
                                                   Container(
@@ -357,9 +358,9 @@ class _infoPageState extends State<infoPage> {
                                                         Align(
                                                           alignment:Alignment.centerLeft,
                                                           child: Text(
-                                                            result![index]['podcast_title'],
+                                                            result!['title'],
                                                             style: const TextStyle(
-                                                                color: Colors.white,
+                                                                color: Colors.black,
                                                                 fontSize: 20,
                                                                 fontWeight: FontWeight.bold
                                                             ),
@@ -370,14 +371,14 @@ class _infoPageState extends State<infoPage> {
                                                           children: [
                                                             const Icon(
                                                               FeatherIcons.user,
-                                                              color: Colors.white,
+                                                              color: Colors.black,
                                                               size: 20,
                                                             ),
                                                             const SizedBox(width: 3),
                                                             Text(
-                                                                result![index]['artist_name'],
+                                                                result!['podcasters'],
                                                                 style: const TextStyle(
-                                                                  color: Colors.white,
+                                                                  color: Colors.black,
                                                                   fontSize: 16,
                                                                 )
                                                             )
@@ -388,7 +389,7 @@ class _infoPageState extends State<infoPage> {
                                                           children: [
                                                             const Icon(
                                                               FeatherIcons.layers,
-                                                              color: Colors.white,
+                                                              color: Colors.black,
                                                               size: 20,
                                                             ),
                                                             const SizedBox(width: 3),
@@ -410,12 +411,12 @@ class _infoPageState extends State<infoPage> {
                                                                     return ListView.builder(
                                                                       shrinkWrap: true,
                                                                       scrollDirection: Axis.horizontal,
-                                                                      itemCount: result == null ? 0: result![0]['category'].length,
+                                                                      itemCount: result == null ? 0: result!['category'].length,
                                                                       itemBuilder: (BuildContext context, int x){
                                                                         return Text(
-                                                                            "${result![0]['category'][x]}, ",
+                                                                            "${result!['category'][x]}, ",
                                                                             style: const TextStyle(
-                                                                              color: Colors.white,
+                                                                              color: Colors.black,
                                                                               fontSize: 16,
                                                                             )
                                                                         );
@@ -428,168 +429,6 @@ class _infoPageState extends State<infoPage> {
                                                           ],
                                                         ),
                                                         const SizedBox(height: 3),
-                                                        Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 50,
-                                                              child: FutureBuilder(
-                                                                future: printValue(),
-                                                                builder: (context,snapshot){
-                                                                  if(snapshot.connectionState == ConnectionState.none && snapshot.hasData == null){
-                                                                    return const Text('No Data');
-                                                                  }
-                                                                  else if(snapshot.connectionState == ConnectionState.waiting){
-                                                                    return const Center(
-                                                                      child: CircularProgressIndicator(
-                                                                        color: Color.fromRGBO(248, 135, 88, 1),
-                                                                      ),
-                                                                    );
-                                                                  }else{
-                                                                    return ListView.builder(
-                                                                      shrinkWrap: true,
-                                                                      scrollDirection: Axis.horizontal,
-                                                                      itemCount: result == null ? 0 : result!.length,
-                                                                      itemBuilder: (BuildContext context, int i){
-                                                                        if(result![i]['rate'] == 0 && result![i]['rate'] < 1.0){
-                                                                          return Row(
-                                                                            children: const [
-                                                                              Text(
-                                                                                'Your podcast is not rated',
-                                                                                style: TextStyle(
-                                                                                    color: Colors.white,
-                                                                                    fontSize: 16,
-                                                                                    fontWeight: FontWeight.bold
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          );
-                                                                        }else if(result![i]['rate'] > 1.0 && result![i]['rate'] < 2.0){
-                                                                          return Row(
-                                                                            children: const [
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              )
-                                                                            ],
-                                                                          );
-                                                                        }else if(result![i]['rate'] >= 2.0 && result![i]['rate'] < 3.0){
-                                                                          return Row(
-                                                                            children: const [
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              )
-                                                                            ],
-                                                                          );
-                                                                        }else if(result![i]['rate'] >= 3.0 && result![i]['rate'] < 4.0){
-                                                                          return Row(
-                                                                            children: const [
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              )
-                                                                            ],
-                                                                          );
-                                                                        }
-                                                                        else{
-                                                                          return Row(
-                                                                            children: const [
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                Icons.star,
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              Icon(
-                                                                                FeatherIcons.star,
-                                                                                color: Colors.white,
-                                                                              )
-                                                                            ],
-                                                                          );
-                                                                        }
-                                                                      },
-                                                                    );
-                                                                  }
-                                                                },
-                                                              ),
-                                                            ),
-                                                            const SizedBox(width: 100),
-                                                            SizedBox(
-                                                              width:100,
-                                                              child: ElevatedButton(
-                                                                onPressed: (){
-                                                                  print('Hello');
-                                                                },
-                                                                child: const Text('Follow'),
-                                                                style: ElevatedButton.styleFrom(
-                                                                    primary: const Color.fromRGBO(248, 135, 88, 1)
-                                                                ),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        )
                                                       ],
                                                     ),
                                                   )
@@ -616,7 +455,7 @@ class _infoPageState extends State<infoPage> {
                                                         child: Align(
                                                           alignment: Alignment.centerLeft,
                                                           child: Text(
-                                                            result![0]['podcast_description'].toString(),
+                                                            result!['description'].toString(),
                                                             style: TextStyle(
                                                                 fontSize: 16,
                                                                 color: Colors.black54
@@ -641,7 +480,7 @@ class _infoPageState extends State<infoPage> {
                                                       child: Align(
                                                         alignment: Alignment.centerLeft,
                                                         child: Text(
-                                                          result![0]['episodes'].length.toString(),
+                                                          result!['episodes'].length.toString(),
                                                           style: TextStyle(
                                                               fontSize: 16,
                                                               color: Colors.black54
@@ -667,13 +506,13 @@ class _infoPageState extends State<infoPage> {
                                                           CircleAvatar(
                                                             radius: 25,
                                                             backgroundColor: Colors.blue,
-                                                            backgroundImage: AssetImage(
-                                                                "${result![0]['image']}"
+                                                            backgroundImage: NetworkImage(
+                                                                "http://$IpAddresse:8000${result!['image']}"
                                                             ),
                                                           ),
                                                           SizedBox(width: 15),
                                                           Text(
-                                                            result![0]['artist_name'].toString(),
+                                                            result!['podcasters'].toString(),
                                                             style: TextStyle(
                                                                 fontSize: 16,
                                                                 color: Colors.black54
@@ -685,7 +524,6 @@ class _infoPageState extends State<infoPage> {
                                                   ],
                                                 ),
                                               ),
-
                                             ],
                                           ),
                                         );
