@@ -15,17 +15,11 @@ import 'package:sliding_sheet/sliding_sheet.dart';
 
 
 class MyAppp extends StatefulWidget {
-  List? playlist;
-  String current;
-  var id;
-  List? image;
-  final String currentImage;
-  final String title;
 
-  MyAppp({Key? key,required this.id,required this.current,required this.playlist, required this.image, required this.currentImage, required this.title}) : super(key: key);
+  MyAppp({Key? key}) : super(key: key);
 
   @override
-  MyApppState createState() => MyApppState(curr:current,pl:playlist);
+  MyApppState createState() => MyApppState();
 }
 
 class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
@@ -35,27 +29,27 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
 
   late List? pl;
   late String curr;
-  MyApppState({required this.curr,this.pl});
+  // MyApppState({});
   late AudioPlayer _player;
 
 
   List<AudioSource> plls(){
     var list=<AudioSource>[];
 
-    list.add(AudioSource.uri(Uri.parse("http://${IpAddresse}:8000${widget.current}"), tag: AudioMetadata(
-      album: widget.title,
-      title: widget.title,
-      artwork: "http://$IpAddresse:8000${widget.currentImage}",
+    list.add(AudioSource.uri(Uri.parse("asset:/storage/emulated/0/Android/data/com.example.awud_app/files/Music/"), tag: AudioMetadata(
+      album: "Hi",
+      title: "Hello",
+      artwork: "https://unsplash.com/images",
     ))
     );
 
     // for (int t=0;t<widget.playlist!.length;t++)
     // {
-    //   var url = "http://${IpAddresse}:8000${widget.playlist![t]}";
+    //   var url = "http://${IpAddresse}:8000/${widget.playlist![t]}";
     //   list.add(AudioSource.uri(Uri.parse(url), tag: AudioMetadata(
-    //     album: widget.title,
-    //     title: "abel ${t}",
-    //     artwork: "http://$IpAddresse:8000${widget.image![t]}",
+    //     album: widget.artistName![t],
+    //     title: widget.musicTitle![t + 1],
+    //     artwork: "http://$IpAddresse:8000/${widget.image}",
     //   ),));
     // }
     return list;
@@ -65,7 +59,6 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    // print('0000000000000000');
     // int i;
     // for(i = 0; i < widget.playlist!.length; i++){
     //   if((widget.playlist!.contains(widget.current))){
@@ -170,7 +163,7 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
                                   onTap: (){
                                     showDialog(
                                       context: context,
-                                      builder: (context) => DownloadingDialog(path:"${path}/${fetchedMusic.path}",file_name: widget.title),
+                                      builder: (context) => DownloadingDialog(path:"${path}/${fetchedMusic.path}",file_name:fetchedMusic.path),
                                     );
                                   },
                                   child: Icon(FeatherIcons.download,color: Colors.black,)
@@ -195,12 +188,12 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
                           ),
                         ),
                         SizedBox(height: 10),
-                        TextButton(onPressed: () async{
-                          String response;
-                          response = await rootBundle.loadString('assets/text/text.txt');
-                          textFile = response;
-                          showTest();
-                        }, child: Text('Lyrics',style: TextStyle(fontSize: 20,color: Colors.black))),
+                        // TextButton(onPressed: () async{
+                        //   String response;
+                        //   response = await rootBundle.loadString('assets/text/text.txt');
+                        //   textFile = response;
+                        //   showTest();
+                        // }, child: Text('Lyrics',style: TextStyle(fontSize: 20,color: Colors.black))),
                         SizedBox(height: 5),
                         Text(metadata.album,
                             style: Theme.of(context).textTheme.headline6),

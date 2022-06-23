@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awud_app/main.dart';
 import 'package:awud_app/pages/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     void register(String email ,String password,String username) async {
       try{
-        Response response = await post(Uri.parse('http://192.168.43.196:5000/user/signup/'),
+        Response response = await post(Uri.parse('http://$IpAddresse:5000/user/signup/'),
             body: {
               'name': username,
               'email' : email,
@@ -67,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
             print(email);
             print(email.runtimeType);
             try{
-              Response response = await post(Uri.parse('http://192.168.43.196:5000/phonenumber/'),
+              Response response = await post(Uri.parse('http://$IpAddresse:5000/phonenumber/'),
                   body: {
                     "phone": email
                   }

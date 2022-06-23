@@ -7,25 +7,32 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import "package:awud_app/pages/music.dart";
 import "package:awud_app/pages/podcast.dart";
 import "package:awud_app/pages/audiobook.dart";
-import "package:awud_app/pages/library.dart";
+// import "package:awud_app/pages/library.dart";
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
+
 var IpAddresse = "192.168.85.229";
+String? finalUsername;
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey =
   'pk_test_51L3gIJC995YiUADqJi1CmMaHawXkIApGcm953pfUVgnt5sDAPwUsunC2cGBbN052yRDvIprd0XMYVVfVf85vReaa00glO8LwgD';
 
-  // num verify = 1;
-  // if(verify == 1){
-  //   runApp(login());
-  // }else{
-  //   runApp(navBar());
-  // }
+  num verify = 1;
+  if(verify == 1){
+    runApp(login());
+  }else{
+    runApp(navBar());
+  }
 
-  runApp(navBar());
+  // runApp(navBar());
 }
 
 class navBar extends StatefulWidget {
@@ -70,11 +77,9 @@ class _navBarState extends State<navBar> {
   //   super.didChangeDependencies();
   // }
   final screens = [
-    // const login(),
     const Music(),
     const Podcast(),
-    const Audiobook(),
-    const Favuorite()
+    const Audiobook()
   ];
 
   PageController controller = PageController();
@@ -110,6 +115,24 @@ class _navBarState extends State<navBar> {
   //     });
   //   });
   //    }
+
+  Future getValidation() async{
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var obtainedUsername = sharedPreferences.getString('username');
+
+    setState(() {
+      finalUsername = obtainedUsername!;
+    });
+  }
+
+  @override
+  void initState(){
+    getValidation().whenComplete(() async{
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => navBar()));
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -179,12 +202,6 @@ class _navBarState extends State<navBar> {
               icon: FeatherIcons.bookOpen,
               //text: getTranslated(context, 'aud')!
               text: 'Audiobook',
-            ),
-            GButton(
-              icon: FeatherIcons.archive,
-              // text: getTranslated(context, 'lib')!
-              text: 'Library',
-              //text: translation(context).name,
             ),
           ],
           selectedIndex: _index,

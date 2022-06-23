@@ -69,7 +69,7 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    // print('0000000000000000');
+    // print(fetchedMusic.path);
     int i;
     for(i = 0; i < widget.playlist!.length; i++){
       if((widget.playlist!.contains(widget.current))){
@@ -135,8 +135,6 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    // List? pl= widget.playlist;
-    // print(pl);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -174,7 +172,7 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
                                   onTap: (){
                                     showDialog(
                                       context: context,
-                                      builder: (context) => DownloadingDialog(path:"${path}/${fetchedMusic.path}",file_name:fetchedMusic.path),
+                                      builder: (context) => DownloadingDialog(path:"http://$IpAddresse:8000${widget.current}",file_name: widget.singleTrackName),
                                     );
                                   },
                                   child: Icon(FeatherIcons.download,color: Colors.black,)

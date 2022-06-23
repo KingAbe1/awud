@@ -149,6 +149,7 @@ class _MusicState extends State<Music> {
                                   padding: EdgeInsets.only(right: 20),
                                   child: GestureDetector(
                                     onTap: (){
+                                      print('here');
                                       Navigator.pushNamed(context, '/setting');
                                     },
                                     child: Icon(

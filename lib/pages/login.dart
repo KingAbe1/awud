@@ -3,6 +3,7 @@ import 'package:awud_app/API/GoogleSignInApi.dart';
 import 'package:awud_app/pages/registration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import 'constants.dart';
 import 'package:http/http.dart';
@@ -32,6 +33,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _obscureText = true;
   final formKey = GlobalKey<FormState>();
   bool _rememberMe = false;
   TextEditingController emailorphonenumberController = TextEditingController();
@@ -46,8 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login(String email , password) async {
-    print(email);
-    print(password);
+    // print(email);
+    // print(password);
 
     try{
       Response response = await post(Uri.parse('https://reqres.in/api/login'),
@@ -59,6 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
+
+        final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.setString('username', email);
+
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => navBar(),));
       }else {
         print('failed');
@@ -173,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       hintText: 'Enter your Username',
                                       hintStyle: kHintTextStyle,
                                     ),
-                                    validator: (value) => value!.isEmpty ? 'Username filed can\'t be empty' : null,
+                                    validator:(value) => value!.isEmpty ? 'Username filed can\'t be empty' : null,
                                   ),
                                 ),
                                 SizedBox(
@@ -190,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 60.0,
                                   child: TextFormField(
                                     controller: passwordController,
-                                    obscureText: true,
+                                    obscureText: _obscureText,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'OpenSans',
@@ -201,6 +207,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                       prefixIcon: Icon(
                                         Icons.lock,
                                         color: Colors.white,
+                                      ),
+                                      suffixIcon: GestureDetector(onTap: (){
+                                        setState(() {
+                                          _obscureText=!_obscureText;
+                                        });
+                                      },
+                                      child: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
                                       ),
                                       hintText: 'Enter your Password',
                                       hintStyle: kHintTextStyle,

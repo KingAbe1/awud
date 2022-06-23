@@ -174,7 +174,7 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
                                   onTap: (){
                                     showDialog(
                                       context: context,
-                                      builder: (context) => DownloadingDialog(path:"${path}/${fetchedMusic.path}",file_name:fetchedMusic.path),
+                                      builder: (context) => DownloadingDialog(path:"${path}/${fetchedMusic.path}",file_name: widget.singleTrackName),
                                     );
                                   },
                                   child: Icon(FeatherIcons.download,color: Colors.black,)

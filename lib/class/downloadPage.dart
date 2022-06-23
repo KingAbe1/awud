@@ -19,7 +19,7 @@ class _DownloadingDialogState extends State<DownloadingDialog> {
     String url = widget.path;
     print(widget.path);
 
-    String fileName = widget.file_name;
+    String fileName = "${widget.file_name}.mp3";
 
     String path = await _getFilePath(fileName);
     print(path);
