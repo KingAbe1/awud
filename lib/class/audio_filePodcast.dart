@@ -20,8 +20,12 @@ class MyAppp extends StatefulWidget {
   var id;
   final String image;
   final String title;
+  List? artistName;
+  List? musicTitle;
+  final String singleTrackName;
+  final String singleArtistName;
 
-  MyAppp({Key? key,required this.id,required this.current,required this.playlist, required this.image, required this.title}) : super(key: key);
+  MyAppp({Key? key,required this.id,required this.current,required this.playlist, required this.image, required this.title, required this.artistName, required this.musicTitle, required this.singleTrackName, required this.singleArtistName}) : super(key: key);
 
   @override
   MyApppState createState() => MyApppState(curr:current,pl:playlist);
@@ -42,8 +46,8 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
     var list=<AudioSource>[];
 
     list.add(AudioSource.uri(Uri.parse("http://${IpAddresse}:8000${widget.current}"), tag: AudioMetadata(
-      album: widget.title,
-      title: widget.title,
+      album: widget.singleArtistName,
+      title: widget.singleTrackName,
       artwork: "http://$IpAddresse:8000${widget.image}",
     ))
     );
@@ -52,8 +56,8 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
     {
       var url = "http://${IpAddresse}:8000${widget.playlist![t]}";
       list.add(AudioSource.uri(Uri.parse(url), tag: AudioMetadata(
-        album: widget.title,
-        title: "abel ${t}",
+        album: widget.artistName![t],
+        title: widget.musicTitle![t + 1],
         artwork: "http://$IpAddresse:8000${widget.image}",
       ),));
     }
@@ -64,7 +68,8 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    // print(widget.current);
+    // print('0000000000000000000000000000000');
+    // print(widget.musicTitle);
     int i;
     for(i = 0; i < widget.playlist!.length; i++){
       if((widget.playlist!.contains(widget.current))){
@@ -194,12 +199,12 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
                           ),
                         ),
                         SizedBox(height: 10),
-                        TextButton(onPressed: () async{
-                          String response;
-                          response = await rootBundle.loadString('assets/text/text.txt');
-                          textFile = response;
-                          showTest();
-                        }, child: Text('Lyrics',style: TextStyle(fontSize: 20,color: Colors.black))),
+                        // TextButton(onPressed: () async{
+                        //   String response;
+                        //   response = await rootBundle.loadString('assets/text/text.txt');
+                        //   textFile = response;
+                        //   showTest();
+                        // }, child: Text('Lyrics',style: TextStyle(fontSize: 20,color: Colors.black))),
                         SizedBox(height: 5),
                         Text(metadata.album,
                             style: Theme.of(context).textTheme.headline6),

@@ -22,6 +22,8 @@ class _categoryPodcastListState extends State<categoryAudiobookList> {
   List? playlist = [];
   List? image = [];
   var count = 0;
+  List? artistName = [];
+  List? musicTitle = [];
 
   Future getPodcast() async{
     var response = await http.get(Uri.parse('http://$IpAddresse:8000/audioBook'));
@@ -42,6 +44,8 @@ class _categoryPodcastListState extends State<categoryAudiobookList> {
         if(podcast![i]['category'].contains(widget.name)){
           playlist!.add(podcast![i]['path']);
           image!.add(podcast![i]['image']);
+          artistName!.add(podcast![i]['author_name']);
+          musicTitle!.add(podcast![i]['title']);
         }
       }
 

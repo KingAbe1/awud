@@ -23,6 +23,8 @@ class _albumPageState extends State<albumPages> {
   List? images = [];
   List? music;
   var num = 0;
+  List? artistName = [];
+  List? musicTitle = [];
 
   Future getMusic() async{
     var response = await http.get(Uri.parse('http://$IpAddresse:8000/music/user/${widget.name}'));
@@ -34,6 +36,8 @@ class _albumPageState extends State<albumPages> {
         for(int i=0;i<music!.length;i++){
           playlist!.add(music![i]['path']);
           images!.add(music![i]['image']);
+          artistName!.add(music![i]['artist_name']);
+          musicTitle!.add(music![i]['title']);
           num = 1;
         }
       }
@@ -97,7 +101,7 @@ class _albumPageState extends State<albumPages> {
                                       GestureDetector(
                                         onTap: (){
                                           Navigator.of(context).push(MaterialPageRoute(
-                                            builder: (context) => MyAppp(id: music![index]['_id'].toString(), current: music![index]['path'].toString(), playlist: playlist, image: images, currentImage: music![index]['image'].toString(),title: music![index]['title'].toString())
+                                            builder: (context) => MyAppp(id: music![index]['_id'].toString(), current: music![index]['path'].toString(), playlist: playlist, image: images, currentImage: music![index]['image'].toString(),title: music![index]['title'].toString(),artistName: artistName, musicTitle: musicTitle,singleTrackName: music![index]['title'].toString(),singleArtistName: music![index]['artist_name'].toString())
                                           ));
                                         },
                                         child: Row(

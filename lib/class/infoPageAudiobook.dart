@@ -23,6 +23,8 @@ class infoPageAudiobookState extends State<infoPageAudiobook> {
   List? playlist = [];
   List? episodes;
   var num = 0;
+  List? artistName = [];
+  List? musicTitle = [];
 
   Future printValue() async{
     var response = await http.get(Uri.parse('http://${IpAddresse}:8000/audioBook/${widget.id}'));
@@ -30,12 +32,17 @@ class infoPageAudiobookState extends State<infoPageAudiobook> {
     if(response.statusCode == 200){
 
       result = json.decode(response.body);
+
       if(num != 1){
         for(int i=0;i<result!['Chapters'].length;i++){
           playlist!.add("${result!['Chapters'][i]['file']}");
+          artistName!.add("${result!['author_name']}");
+          musicTitle!.add("${result!['Chapters'][i]['chapterName']}");
           num = 1;
         }
       }
+
+      print(musicTitle);
 
       return result;
     }
@@ -214,11 +221,11 @@ class infoPageAudiobookState extends State<infoPageAudiobook> {
                                                                                     borderRadius: BorderRadius.circular(5),
                                                                                     child: GestureDetector(
                                                                                       onTap:(){
-                                                                                        setState(() {
+                                                                                        // print(artistName);
                                                                                           Navigator.of(context).push(MaterialPageRoute(
-                                                                                            builder: (context) => playerPage(value: result!['_id'].toString(),epi: result!['Chapters'][x]['file'].toString(),pl:playlist,image:result!['image'].toString(),title:result!['title'].toString()),
+                                                                                            builder: (context) => playerPage(value: result!['_id'].toString(),epi: result!['Chapters'][x]['file'].toString(),pl:playlist,image:result!['image'].toString(),title:result!['title'].toString(),artistName: artistName,musicTitle: musicTitle,singleTrackName: result!['Chapters'][index]['chapterName'].toString(),singleArtistName: result!['author_name'].toString()),
                                                                                           ));
-                                                                                        });
+                                                                                        // });
                                                                                       },
                                                                                       child: Stack(
                                                                                           alignment: Alignment.center,

@@ -30,6 +30,9 @@ class _MusicState extends State<Music> {
   List? artist;
   List? playlist = [];
   List? image = [];
+  List? artistName = [];
+  List? musicTitle = [];
+  // String? singleTrackName;
 
   Future getPodcast() async{
     var response = await http.get(Uri.parse('http://$IpAddresse:8000/music/'));
@@ -40,6 +43,9 @@ class _MusicState extends State<Music> {
       for(int i=0;i<music!.length;i++){
         playlist!.add("${music![i]['path']}");
         image!.add("${music![i]['image']}");
+        artistName!.add("${music![i]['artist_name']}");
+        musicTitle!.add("${music![i]['title']}");
+        // singleTrackName =
       }
 
       return music;
@@ -51,7 +57,6 @@ class _MusicState extends State<Music> {
 
     if(response.statusCode == 200){
       album = json.decode(response.body);
-
       return album;
     }
   }
@@ -74,6 +79,8 @@ class _MusicState extends State<Music> {
         for(int i=0;i<newMusic!.length;i++){
           playlist!.add("${newMusic![i]['path']}");
           image!.add(newMusic![i]['image']);
+          artistName!.add("${newMusic![i]['artist_name']}");
+          musicTitle!.add("${newMusic![i]['title']}");
         }
 
       return newMusic;
@@ -253,7 +260,7 @@ class _MusicState extends State<Music> {
                                                 GestureDetector(
                                                   onTap: (){
                                                     Navigator.of(context).push(MaterialPageRoute(
-                                                        builder: (context) => MyAppp(id: music![index]['_id'].toString(), current: music![index]['path'].toString(), playlist: playlist, image: image,currentImage: music![index]['image'].toString(),title: music![index]['title'].toString())
+                                                        builder: (context) => MyAppp(id: music![index]['_id'].toString(), current: music![index]['path'].toString(), playlist: playlist, image: image,currentImage: music![index]['image'].toString(),title: music![index]['title'].toString(),artistName: artistName,musicTitle:musicTitle,singleTrackName: music![index]['title'].toString(),singleArtistName: music![index]['artist_name'].toString())
                                                     ));
                                                   },
                                                   child: ClipRRect(
@@ -572,7 +579,7 @@ class _MusicState extends State<Music> {
                                                     // print(image);
                                                     // print(newMusic![index]['image']);
                                                     Navigator.of(context).push(MaterialPageRoute(
-                                                        builder: (context) => MyAppp(id: newMusic![index]['_id'].toString(), current: newMusic![index]['path'].toString(), playlist: playlist, image: image, currentImage: newMusic![index]['image'].toString(), title: newMusic![index]['title'].toString())
+                                                        builder: (context) => MyAppp(id: newMusic![index]['_id'].toString(), current: newMusic![index]['path'].toString(), playlist: playlist, image: image, currentImage: newMusic![index]['image'].toString(), title: newMusic![index]['title'].toString(),artistName: artistName,musicTitle: musicTitle,singleTrackName: newMusic![index]['title'].toString(),singleArtistName: newMusic![index]['artist_name'].toString())
                                                     ));
                                                   },
                                                   child: ClipRRect(

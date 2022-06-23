@@ -21,8 +21,12 @@ class MyAppp extends StatefulWidget {
   List? image;
   final String currentImage;
   final String title;
+  List? artistName;
+  List? musicTitle;
+  final String singleTrackName;
+  final String singleArtistName;
 
-  MyAppp({Key? key,required this.id,required this.current,required this.playlist, required this.image, required this.currentImage, required this.title}) : super(key: key);
+  MyAppp({Key? key,required this.id,required this.current,required this.playlist, required this.image, required this.currentImage, required this.title, required this.artistName, required this.musicTitle, required this.singleTrackName, required this.singleArtistName}) : super(key: key);
 
   @override
   MyApppState createState() => MyApppState(curr:current,pl:playlist);
@@ -43,8 +47,8 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
     var list=<AudioSource>[];
 
     list.add(AudioSource.uri(Uri.parse("http://${IpAddresse}:8000${widget.current}"), tag: AudioMetadata(
-      album: widget.title,
-      title: widget.title,
+      album: widget.singleArtistName,
+      title: widget.singleTrackName,
       artwork: "http://$IpAddresse:8000${widget.currentImage}",
     ))
     );
@@ -53,8 +57,8 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
     {
       var url = "http://${IpAddresse}:8000${widget.playlist![t]}";
       list.add(AudioSource.uri(Uri.parse(url), tag: AudioMetadata(
-        album: widget.title,
-        title: "abel ${t}",
+        album: widget.artistName![t],
+        title: widget.musicTitle![t].toString(),
         artwork: "http://$IpAddresse:8000${widget.image![t]}",
       ),));
     }

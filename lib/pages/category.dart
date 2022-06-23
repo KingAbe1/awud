@@ -20,6 +20,8 @@ class _categoryListState extends State<categoryList> {
   List? playlist = [];
   List? image = [];
   var count = 0;
+  List? artistName = [];
+  List? musicTitle = [];
 
   Future getMusic() async{
     var response = await http.get(Uri.parse('http://$IpAddresse:8000/music'));
@@ -40,6 +42,8 @@ class _categoryListState extends State<categoryList> {
         if(music![i]['category'].contains(widget.name)){
           playlist!.add(music![i]['path']);
           image!.add(music![i]['image']);
+          artistName!.add(music![i]['artist_name']);
+          musicTitle!.add(music![i]['title']);
         }
       }
 
@@ -103,7 +107,7 @@ class _categoryListState extends State<categoryList> {
                                 GestureDetector(
                                   onTap: (){
                                     Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) => MyAppp(id: music![index]['_id'].toString(), current: music![index]['path'].toString(), playlist: playlist, image: image, currentImage: music![index]['image'].toString(),title: music![index]['title'].toString())
+                                        builder: (context) => MyAppp(id: music![index]['_id'].toString(), current: music![index]['path'].toString(), playlist: playlist, image: image, currentImage: music![index]['image'].toString(),title: music![index]['title'].toString(), artistName: artistName, musicTitle: musicTitle,singleTrackName: music![index]['title'].toString(),singleArtistName: music![index]['artist_name'].toString())
                                     ));
                                   },
                                   child: ListTile(

@@ -25,6 +25,9 @@ class _infoPageState extends State<infoPage> {
   var result;
   List? episodes;
   List? playlist = [];
+  List? artistName = [];
+  List? musicTitle = [];
+
   var num = 0;
 
 
@@ -38,9 +41,14 @@ class _infoPageState extends State<infoPage> {
       if(num != 1){
         for(int i=0;i<result!['episodes'].length;i++){
           playlist!.add("${result!['episodes'][i]['file']}");
+          artistName!.add("${result!['podcasters']}");
+          musicTitle!.add("${result!['episodes'][i]['episodeName']}");
           num = 1;
         }
       }
+
+      print(artistName);
+      print(musicTitle);
 
       return result;
     }
@@ -233,10 +241,10 @@ class _infoPageState extends State<infoPage> {
                                                                                           // print(result!['episodes'][x]['file']);
                                                                                           // print(playlist);
                                                                                           // print(result!['image']);
-                                                                                          // print(result!['title']);
+                                                                                          // print(musicTitle);
                                                                                           // print((json.decode(jsonData![index])).runtimeType);
                                                                                           Navigator.of(context).push(MaterialPageRoute(
-                                                                                            builder: (context) => playerPage(value: result!['_id'].toString(),epi: result!['episodes'][x]['file'].toString(),pl: playlist, image: result!['image'], title: result!['title']),
+                                                                                            builder: (context) => playerPage(value: result!['_id'].toString(),epi: result!['episodes'][x]['file'].toString(),pl: playlist, image: result!['image'], title: result!['title'],artistName: artistName,musicTitle: musicTitle,singleTrackName: result!['episodes'][x]['episodeName'].toString(),singleArtistName: result!['podcasters'].toString()),
                                                                                           ));
                                                                                         // });
                                                                                       },
