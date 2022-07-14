@@ -163,10 +163,9 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 45,top: 25),
+                          margin: EdgeInsets.only(left: 70,top: 25),
                           child: Row(
                             children: [
-                              Icon(FeatherIcons.heart,color: Colors.black,),
                               SizedBox(width: 60),
                               GestureDetector(
                                   onTap: (){
@@ -180,30 +179,30 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
                               SizedBox(width: 60),
                               GestureDetector(
                                   onTap: (){
-                                    Share.share('${fetchedMusic.title}\n${fetchedMusic.music_description}', subject: 'Look what I made!');
+                                    Share.share('${widget.title}\n${widget.singleTrackName}', subject: 'Look what I made!');
                                   },
                                   child: Icon(FeatherIcons.share2,color: Colors.black,
                                   )
                               ),
                               SizedBox(width: 60),
-                              GestureDetector(
-                                  onTap: (){
-                                    openAlert();
-                                  },
-                                  child: Icon(FeatherIcons.plus,color: Colors.black,
-                                  )
-                              ),
+                              // GestureDetector(
+                              //     onTap: (){
+                              //       openAlert();
+                              //     },
+                              //     child: Icon(FeatherIcons.plus,color: Colors.black,
+                              //     )
+                              // ),
                             ],
                           ),
                         ),
-                        SizedBox(height: 10),
-                        TextButton(onPressed: () async{
-                          String response;
-                          response = await rootBundle.loadString('assets/text/text.txt');
-                          textFile = response;
-                          showTest();
-                        }, child: Text('Lyrics',style: TextStyle(fontSize: 20,color: Colors.black))),
-                        SizedBox(height: 5),
+                        // SizedBox(height: 10),
+                        // TextButton(onPressed: () async{
+                        //   String response;
+                        //   response = await rootBundle.loadString('assets/text/text.txt');
+                        //   textFile = response;
+                        //   showTest();
+                        // }, child: Text('Lyrics',style: TextStyle(fontSize: 20,color: Colors.black))),
+                        SizedBox(height: 30),
                         Text(metadata.album,
                             style: Theme.of(context).textTheme.headline6),
                         Text(metadata.title),

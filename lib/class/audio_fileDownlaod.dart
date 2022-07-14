@@ -157,7 +157,7 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
                           margin: EdgeInsets.only(left: 45,top: 25),
                           child: Row(
                             children: [
-                              Icon(FeatherIcons.heart,color: Colors.black,),
+                             // Icon(FeatherIcons.heart,color: Colors.black,),
                               SizedBox(width: 60),
                               GestureDetector(
                                   onTap: (){
@@ -177,13 +177,13 @@ class MyApppState extends State<MyAppp> with WidgetsBindingObserver {
                                   )
                               ),
                               SizedBox(width: 60),
-                              GestureDetector(
-                                  onTap: (){
-                                    openAlert();
-                                  },
-                                  child: Icon(FeatherIcons.plus,color: Colors.black,
-                                  )
-                              ),
+                              // GestureDetector(
+                              //     onTap: (){
+                              //       openAlert();
+                              //     },
+                              //     child: Icon(FeatherIcons.plus,color: Colors.black,
+                              //     )
+                              // ),
                             ],
                           ),
                         ),

@@ -52,9 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
     // print(password);
 
     try{
-      Response response = await post(Uri.parse('https://reqres.in/api/login'),
+      Response response = await post(Uri.parse('http://$IpAddresse:8000/user/login'),
           body: {
-            'email' : email,
+            'username' : email,
             'password' : password
           }
       );
@@ -62,12 +62,21 @@ class _LoginScreenState extends State<LoginScreen> {
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
 
-        final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString('username', email);
+        // final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        // sharedPreferences.setString('username', email);
 
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => navBar(),));
       }else {
-        print('failed');
+        final snackBar = SnackBar(
+          content: const Text('Incorrect username or password'),
+          action: SnackBarAction(
+            label: 'Error',
+            onPressed: () {
+              // Some code to undo the change.
+            },
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }catch(e){
       print(e.toString());
@@ -229,23 +238,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                     },
                                   ),
                                 ),
-                                Container(
-                                    alignment: Alignment.centerRight,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(height: 30,),
-                                        GestureDetector(
-                                          onTap: (){
-
-                                          },
-                                          child: Text(
-                                            'Forgot Password?',
-                                            style: kLabelStyle,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                ),
+                                // Container(
+                                //     alignment: Alignment.centerRight,
+                                //     child: Column(
+                                //       children: [
+                                //         SizedBox(height: 30,),
+                                //         GestureDetector(
+                                //           onTap: (){
+                                //
+                                //           },
+                                //           child: Text(
+                                //             'Forgot Password?',
+                                //             style: kLabelStyle,
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     )
+                                // ),
                                 Container(
                                   padding: EdgeInsets.symmetric(vertical: 25.0),
                                   width: double.infinity,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:awud_app/class/language.dart';
 import 'package:awud_app/localization/language_constants.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 30),
             Center(
               child: InkWell(
-                onTap: ()async{
-                  await makePayment();
+                onTap: (){
+                  exit(0);
                 },
                 child: Container(
                   height: 50,
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.green,
                   child: Center(
                     // child: Text(translation(context).pi , style: TextStyle(color: Colors.white , fontSize: 20),),
-                   // child: Text('Pay with yenepay' , style: TextStyle(color: Colors.white , fontSize: 20),),
+                   child: Text('Logout' , style: TextStyle(color: Colors.white , fontSize: 20),),
                   ),
                 ),
               ),
@@ -107,10 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
     child: Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-    Text('language', style: TextStyle(fontSize: 20, color: Colors.grey[600])),
-    Icon(Icons.arrow_forward_ios, color: Colors.grey),
-    ],
+    // children: [
+    // Text('language', style: TextStyle(fontSize: 20, color: Colors.grey[600])),
+    // Icon(Icons.arrow_forward_ios, color: Colors.grey),
+    // ],
     ),
     ),
     )

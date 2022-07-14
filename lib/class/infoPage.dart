@@ -297,8 +297,8 @@ class _infoPageState extends State<infoPage> {
                                                                                           Text(
                                                                                             "${result!['episodes'][x]['episodeLength']} min",
                                                                                           ),
-                                                                                          SizedBox(width: 35),
-                                                                                          Icon(FeatherIcons.heart,color: Color.fromRGBO(248, 135, 88, 1),),
+                                                                                          // SizedBox(width: 35),
+                                                                                          // Icon(FeatherIcons.heart,color: Color.fromRGBO(248, 135, 88, 1),),
                                                                                           SizedBox(width: 35),
                                                                                           Icon(FeatherIcons.download,color: Color.fromRGBO(248, 135, 88, 1),)
                                                                                         ],

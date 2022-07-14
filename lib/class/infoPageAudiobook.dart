@@ -285,8 +285,8 @@ class infoPageAudiobookState extends State<infoPageAudiobook> {
                                                                                             "${result!['Chapters'][x]['chapterLength']} min",
                                                                                           ),
                                                                                           SizedBox(width: 35),
-                                                                                          Icon(FeatherIcons.heart,color: Color.fromRGBO(248, 135, 88, 1),),
-                                                                                          SizedBox(width: 35),
+                                                                                          // Icon(FeatherIcons.heart,color: Color.fromRGBO(248, 135, 88, 1),),
+                                                                                          // SizedBox(width: 35),
                                                                                           Icon(FeatherIcons.download,color: Color.fromRGBO(248, 135, 88, 1),)
                                                                                         ],
                                                                                       ),

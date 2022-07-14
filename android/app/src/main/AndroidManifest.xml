@@ -2,7 +2,7 @@
     package="com.example.awud_app">
 
    <application
-        android:label="awud_app"
+        android:label="Awud"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
 

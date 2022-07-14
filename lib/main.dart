@@ -127,9 +127,9 @@ class _navBarState extends State<navBar> {
 
   @override
   void initState(){
-    getValidation().whenComplete(() async{
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => navBar()));
-    });
+    // getValidation().whenComplete(() async{
+    //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => navBar()));
+    // });
     super.initState();
   }
 
@@ -180,7 +180,7 @@ class _navBarState extends State<navBar> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(5),
         child: GNav(
-          gap: 8,
+          gap: 0,
           activeColor: Colors.white,
           // backgroundColor: Colors.white,
           tabBackgroundColor: const Color.fromRGBO(248, 135, 88, 1),

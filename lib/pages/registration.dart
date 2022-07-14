@@ -54,47 +54,27 @@ class _LoginScreenState extends State<LoginScreen> {
 
     void register(String email ,String password,String username) async {
       try{
-        Response response = await post(Uri.parse('http://$IpAddresse:5000/user/signup/'),
+        Response response = await post(Uri.parse('http://$IpAddresse:8000/user/signUp/'),
             body: {
-              'name': username,
-              'email' : email,
+              'username': username,
               'password' : password
+
             }
         );
         if(response.statusCode == 200){
           print('Success');
           var data = jsonDecode(response.body.toString());
-          if(isNumeric(email)){
-            print(email);
-            print(email.runtimeType);
-            try{
-              Response response = await post(Uri.parse('http://$IpAddresse:5000/phonenumber/'),
-                  body: {
-                    "phone": email
-                  }
-              );
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhone(phone:email.toString())));
-            }catch(e){
-              print(e.toString());
-              final snackBar = SnackBar(
-                content: const Text('Error sending user code'),
-                action: SnackBarAction(
-                  label: 'Error',
-                  onPressed: () {
-                    // Some code to undo the change.
-                  },
-                ),
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
+
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => login()));
+
           }else{
             // Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhone()));
           }
-        }else {
-          Container(
-            margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 50),
-          );
-        }
+        // }else {
+        //   Container(
+        //     margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 50),
+        //   );
+        // }
       }catch(e){
         print(e.toString());
         final snackBar = SnackBar(
